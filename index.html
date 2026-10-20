@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#064d41">
+    <meta name="description"
+        content="Explora los sistemas de información territorial de la Municipalidad de San Borja.">
+    <title>SIT San Borja | Sistemas de Información Territorial</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/fontawesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/solid.min.css">
+</head>
+
+<body>
+    <header class="header" id="inicio"><a href="#inicio" class="header-brand" aria-label="Unidad de Planeamiento Urbano, inicio"><img class="upu-logo" src="assets/upu-logo.svg" alt=""><span class="upu-name">Unidad de<br>Planeamiento Urbano</span></a>
+        <div class="header-ogide"><strong>OGIDE</strong><span>Oficina General de Innovación<br>y Desarrollo Económico</span></div>
+        <div class="header-city"><div class="city-crest" aria-hidden="true"><img src="assets/municipalidad-san-borja.png" alt=""></div><span class="city-name">Municipalidad<br>de San Borja</span></div>
+    </header>
+    <main class="page">
+        <section class="hero" aria-labelledby="main-title">
+            <div class="hero-main">
+                <p class="eyebrow">PLANEAMIENTO URBANO <i>·</i> <span class="eyebrow-city">Municipalidad de San Borja</span></p>
+                <h1 id="main-title">Sistema de<br><em>Información Territorial</em></h1>
+                <p class="subtitle">Visores geográficos para consulta del planeamiento urbano.</p>
+            </div>
+        </section>
+        <section class="search-area" aria-labelledby="property-search-title">
+            <div class="search-heading">
+                <div><h2 id="property-search-title">Busca un visor o un dato</h2><p>Busca por actividad, parque, vía, tramo, cuadrante o código.</p></div>
+            </div>
+            <form id="property-search-form" class="property-search-form" autocomplete="off">
+                <div class="address-wrap">
+                    <i class="address-icon fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <label class="sr-only" for="address-search">Buscar visores o datos reales</label>
+                    <input id="address-search" type="search" placeholder="Ej.: tramo de Enrique Meiggs, Parque El Pinar o N-41" aria-expanded="false" aria-controls="address-suggestions">
+                    <button id="clear-search" class="address-clear" type="button" aria-label="Borrar búsqueda" title="Borrar búsqueda"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+                    <div id="address-suggestions" class="address-suggestions" role="listbox" hidden></div>
+                </div>
+                <button class="consult-button" type="submit">Buscar <span aria-hidden="true">↗</span></button>
+            </form>
+        </section>
+        <section id="data-search-details" class="parcel-workspace data-result-workspace" aria-live="polite" hidden></section>
+        <section class="catalog" id="visores" aria-label="Catálogo de visores">
+            <div class="catalog-toolbar"><div class="catalog-heading"><h2>Explora los visores</h2><p>También puedes ingresar directamente por tema.</p></div>
+                <div class="filters" role="group" aria-label="Filtrar visores"><button class="filter active"
+                        data-category="todos" aria-pressed="true">Todos</button><button class="filter"
+                        data-category="suelo" aria-pressed="false">Uso del suelo</button><button class="filter"
+                        data-category="movilidad" aria-pressed="false">Movilidad</button><button class="filter"
+                        data-category="espacio" aria-pressed="false">Espacio público</button></div>
+            </div>
+            <div id="cardGrid" class="cards">
+                <div class="card" data-visor-id="parametros" data-category="planeamiento normativa"
+                    data-text="parametros urbanisticos edificatorios pue suelo edificacion">
+                    <div class="card-image" aria-hidden="true"></div>
+                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-parametros.svg" alt=""></div>
+                    <div class="card-content"><h2>Parámetros Urbanísticos y Edificatorios</h2>
+                        <p>Condiciones de uso y edificación aplicables a los predios.</p><span class="status">Enlace por
+                            incorporar</span>
+                    </div>
+                </div>
+                <a class="card short" data-visor-id="usos" href="https://mapausoscompatible.netlify.app/" target="_blank"
+                    rel="noopener noreferrer" data-category="planeamiento suelo"
+                    data-text="indice usos ubicación actividades urbanas compatible zonificacion uso suelo">
+                    <div class="card-image" aria-hidden="true"></div>
+                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-usos.svg" alt=""></div>
+                    <div class="card-content">
+                        <h2>Índice de Usos para la Ubicación de Actividades Urbanas</h2>
+                        <p>Consulta las actividades urbanas y su localización en el distrito.</p><span
+                            class="card-link">Abrir visor <span>↗</span></span>
+                    </div><span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
+                <div class="card mid" data-visor-id="residencial" data-category="planeamiento suelo"
+                    data-text="compatibilidad usos zonas residenciales cuzr">
+                    <div class="card-image" aria-hidden="true"></div>
+                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-residencial.svg" alt=""></div>
+                    <div class="card-content">
+                        <h2>Compatibilidad de Usos para Zonas Residenciales</h2>
+                        <p>Condiciones de compatibilidad de actividades en zonificación residencial.</p><span
+                            class="status">Enlace por incorporar</span>
+                    </div>
+                </div>
+                <div class="card mid" data-visor-id="operacion" data-category="planeamiento normativa"
+                    data-text="niveles operacionales estandares calidad actividades">
+                    <div class="card-image" aria-hidden="true"></div>
+                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-calidad.svg" alt=""></div>
+                    <div class="card-content">
+                        <h2>Niveles Operacionales y Estándares de Calidad</h2>
+                        <p>Condiciones de funcionamiento de las actividades urbanas.</p><span class="status">Enlace por
+                            incorporar</span>
+                    </div>
+                </div>
+                <a class="card short" data-visor-id="vias" href="https://sistemavial.msb.gob.pe/" target="_blank"
+                    rel="noopener noreferrer" data-category="movilidad"
+                    data-text="vias locales secciones viales sistema vial movilidad">
+                    <div class="card-image" aria-hidden="true"></div>
+                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-vias.svg" alt=""></div>
+                    <div class="card-content">
+                        <h2>Vías Locales y Secciones Viales</h2>
+                        <p>Explora la red vial y sus secciones características.</p><span class="card-link">Abrir visor
+                            <span>↗</span></span>
+                    </div><span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="card short" data-visor-id="slo" href="https://visorslo.netlify.app/" target="_blank" rel="noopener noreferrer"
+                    data-category="suelo" data-text="superficies limitadoras obstaculos slo base aerea las palmas">
+                    <div class="card-image" aria-hidden="true"></div>
+                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-slo.svg" alt=""></div>
+                    <div class="card-content">
+                        <h2>Superficies Limitadoras de Obstáculos (SLO)</h2>
+                        <p>Restricciones en el entorno de la Base Aérea Las Palmas.</p><span class="card-link">Abrir
+                            visor <span>↗</span></span>
+                    </div><span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="card short" data-visor-id="espacios" href="https://espaciospublicosmsb.netlify.app/" target="_blank"
+                    rel="noopener noreferrer" data-category="espacio"
+                    data-text="espacios publicos parques plazas areas verdes">
+                    <div class="card-image" aria-hidden="true"></div>
+                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-parques.svg" alt=""></div>
+                    <div class="card-content">
+                        <h2>Espacios Públicos</h2>
+                        <p>Consulta parques, plazas y espacios públicos del distrito.</p><span class="card-link">Abrir
+                            visor <span>↗</span></span>
+                    </div><span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
+                <a class="card short" data-visor-id="soterrados" href="https://inventariodiestra2026.netlify.app/" target="_blank" rel="noopener noreferrer" data-category="espacio" data-text="soterrados contenedores residuos basura inventario diestra">
+                    <div class="card-image" aria-hidden="true"></div>
+                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-soterrados.svg" alt=""></div>
+                    <div class="card-content"><h2>Soterrados</h2><p>Consulta el inventario de contenedores soterrados del distrito.</p><span class="card-link">Abrir visor <span>↗</span></span></div><span class="card-arrow" aria-hidden="true">↗</span>
+                </a>
+            </div>
+            <div class="empty" id="empty" hidden>No se encontraron visores. Prueba otra búsqueda o categoría.</div>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <div class="footer-copyright"><strong>© 2026 Municipalidad de San Borja</strong><p>Todos los derechos reservados.</p></div>
+        <div class="footer-links"><span>Sistema de Información Territorial</span><a href="https://www.gob.pe/113597-sistemas-de-informacion-territorial" target="_blank" rel="noopener noreferrer">Información institucional <span aria-hidden="true">↗</span></a></div>
+        <a class="back-top" href="#inicio">Volver arriba ↑</a>
+    </footer>
+    <script src="data/search-data-loader.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
+
+
+
