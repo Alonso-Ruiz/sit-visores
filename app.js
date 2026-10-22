@@ -4,30 +4,169 @@
   'use strict';
 
   const CATEGORIES = [
-    { id: 'uso-suelo', title: 'Uso del suelo', short: 'Clasificación del suelo y compatibilidades.', description: 'Conoce la clasificación del suelo, los usos compatibles y la normativa aplicable en San Borja.', icon: 'building', info: [['layers', 'Clasificación del suelo'], ['file', 'Usos y compatibilidades'], ['map', 'Normativa relacionada']] },
-    { id: 'movilidad', title: 'Movilidad', short: 'Red vial, transporte y conectividad.', description: 'Explora la red vial, las secciones de las vías y la conectividad del distrito.', icon: 'car', info: [['route', 'Red vial local'], ['car', 'Secciones viales'], ['layers', 'Conectividad urbana']] },
-    { id: 'espacio-publico', title: 'Espacio público', short: 'Parques, áreas verdes y equipamiento urbano.', description: 'Descubre los parques, las áreas verdes y los espacios públicos del distrito.', icon: 'tree', info: [['tree', 'Parques y áreas verdes'], ['map', 'Espacios públicos'], ['layers', 'Equipamiento urbano']] },
-    { id: 'normativa', title: 'Normativa urbana', short: 'Parámetros, reglamentos y documentos técnicos.', description: 'Accede a la información normativa y los instrumentos que orientan el desarrollo urbano.', icon: 'file', info: [['file', 'Reglamentación urbana'], ['building', 'Parámetros urbanísticos'], ['map', 'Instrumentos de gestión']] }
+    {
+      id: 'uso-suelo',
+      title: 'Uso del suelo',
+      short: 'Clasificación del suelo y compatibilidades.',
+      description:
+        'Conoce la clasificación del suelo, los usos compatibles y la normativa aplicable en San Borja.',
+      icon: 'building',
+      info: [
+        ['layers', 'Clasificación del suelo'],
+        ['file', 'Usos y compatibilidades'],
+        ['map', 'Normativa relacionada'],
+      ],
+    },
+    {
+      id: 'movilidad',
+      title: 'Movilidad',
+      short: 'Red vial, transporte y conectividad.',
+      description:
+        'Explora la red vial, las secciones de las vías y la conectividad del distrito.',
+      icon: 'car',
+      info: [
+        ['route', 'Red vial local'],
+        ['car', 'Secciones viales'],
+        ['layers', 'Conectividad urbana'],
+      ],
+    },
+    {
+      id: 'espacio-publico',
+      title: 'Espacio público',
+      short: 'Parques, áreas verdes y equipamiento urbano.',
+      description:
+        'Descubre los parques, las áreas verdes y los espacios públicos del distrito.',
+      icon: 'tree',
+      info: [
+        ['tree', 'Parques y áreas verdes'],
+        ['map', 'Espacios públicos'],
+        ['layers', 'Equipamiento urbano'],
+      ],
+    },
+    {
+      id: 'normativa',
+      title: 'Normativa urbana',
+      short: 'Parámetros, reglamentos y documentos técnicos.',
+      description:
+        'Accede a la información normativa y los instrumentos que orientan el desarrollo urbano.',
+      icon: 'file',
+      info: [
+        ['file', 'Reglamentación urbana'],
+        ['building', 'Parámetros urbanísticos'],
+        ['map', 'Instrumentos de gestión'],
+      ],
+    },
   ];
 
   const VIEWERS = [
-    { id: 'indice-usos', title: 'Índice de Usos', label: 'USO DEL SUELO', description: 'Consulta los usos del suelo y sus compatibilidades en San Borja.', icon: 'layers', categories: ['uso-suelo', 'normativa'], url: 'https://mapausoscompatible.netlify.app/' },
-    { id: 'vias-locales', title: 'Vías Locales', label: 'MOVILIDAD', description: 'Explora la red vial, la jerarquía y las características de las vías.', icon: 'car', categories: ['movilidad'], url: 'https://sistemavial.msb.gob.pe/' },
-    { id: 'espacios-publicos', title: 'Espacios Públicos', label: 'ESPACIO URBANO', description: 'Ubica parques, áreas verdes y equipamiento urbano.', icon: 'tree', categories: ['espacio-publico'], url: 'https://espaciospublicosmsb.netlify.app/' },
-    { id: 'soterrados', title: 'Soterrados', label: 'INFRAESTRUCTURA', description: 'Visualiza la infraestructura de servicios soterrados.', icon: 'route', categories: ['espacio-publico'], url: 'https://inventariodiestra2026.netlify.app/' },
-    { id: 'slo', title: 'SLO', label: 'PLANIFICACIÓN TERRITORIAL', description: 'Consulta las superficies limitadoras de obstáculos y las restricciones aeronáuticas.', icon: 'map', categories: ['normativa'], url: 'https://visorslo.netlify.app/' },
-    { id: 'convenios', title: 'Convenios', label: 'GESTIÓN URBANA', description: 'Revisa convenios urbanísticos y su ubicación en el territorio.', icon: 'file', categories: ['normativa'], url: 'https://visor-convenio.netlify.app/' }
+    {
+      id: 'indice-usos',
+      title: 'Índice de Usos',
+      label: 'USO DEL SUELO',
+      description:
+        'Consulta los usos del suelo y sus compatibilidades en San Borja.',
+      icon: 'layers',
+      categories: ['uso-suelo', 'normativa'],
+      url: 'https://mapausoscompatible.netlify.app/',
+    },
+    {
+      id: 'vias-locales',
+      title: 'Vías Locales',
+      label: 'MOVILIDAD',
+      description:
+        'Explora la red vial, la jerarquía y las características de las vías.',
+      icon: 'car',
+      categories: ['movilidad'],
+      url: 'https://sistemavial.msb.gob.pe/',
+    },
+    {
+      id: 'espacios-publicos',
+      title: 'Espacios Públicos',
+      label: 'ESPACIO URBANO',
+      description: 'Ubica parques, áreas verdes y equipamiento urbano.',
+      icon: 'tree',
+      categories: ['espacio-publico'],
+      url: 'https://espaciospublicosmsb.netlify.app/',
+    },
+    {
+      id: 'soterrados',
+      title: 'Soterrados',
+      label: 'INFRAESTRUCTURA',
+      description: 'Visualiza la infraestructura de servicios soterrados.',
+      icon: 'route',
+      categories: ['espacio-publico'],
+      url: 'https://inventariodiestra2026.netlify.app/',
+    },
+    {
+      id: 'slo',
+      title: 'SLO',
+      label: 'PLANIFICACIÓN TERRITORIAL',
+      description:
+        'Consulta las superficies limitadoras de obstáculos y las restricciones aeronáuticas.',
+      icon: 'map',
+      categories: ['normativa'],
+      url: 'https://visorslo.netlify.app/',
+    },
+    {
+      id: 'convenios',
+      title: 'Convenios',
+      label: 'GESTIÓN URBANA',
+      description:
+        'Revisa convenios urbanísticos y su ubicación en el territorio.',
+      icon: 'file',
+      categories: ['normativa'],
+      url: 'https://visor-convenio.netlify.app/',
+    },
   ];
 
   const EXTRA_RESOURCES = [
-    { id: 'parametros', title: 'Parámetros Urbanísticos', description: 'Revisa los parámetros normativos aplicables por zona.', icon: 'building', categories: ['uso-suelo', 'normativa'], url: null },
-    { id: 'plano-zonificacion', title: 'Plano de Zonificación', description: 'Visualiza la zonificación vigente del distrito.', icon: 'map', categories: ['uso-suelo', 'normativa'], url: null },
-    { id: 'niveles-operacionales', title: 'Niveles Operacionales', description: 'Información sobre condiciones de funcionamiento de actividades.', icon: 'file', categories: ['uso-suelo', 'normativa'], url: null }
+    {
+      id: 'parametros',
+      title: 'Parámetros Urbanísticos',
+      description: 'Revisa los parámetros normativos aplicables por zona.',
+      icon: 'building',
+      categories: ['uso-suelo', 'normativa'],
+      url: null,
+    },
+    {
+      id: 'plano-zonificacion',
+      title: 'Plano de Zonificación',
+      description: 'Visualiza la zonificación vigente del distrito.',
+      icon: 'map',
+      categories: ['uso-suelo', 'normativa'],
+      url: null,
+    },
+    {
+      id: 'niveles-operacionales',
+      title: 'Niveles Operacionales',
+      description:
+        'Información sobre condiciones de funcionamiento de actividades.',
+      icon: 'file',
+      categories: ['uso-suelo', 'normativa'],
+      url: null,
+    },
   ];
 
-  const icon = (name, cls = '') => `<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
-  const safe = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
-  const normalize = val => String(val).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+  const icon = (name, cls = '') =>
+    `<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
+  const safe = (value) =>
+    String(value).replace(
+      /[&<>"']/g,
+      (char) =>
+        ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        })[char]
+    );
+  const normalize = (val) =>
+    String(val)
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
   const main = document.querySelector('#mainContent');
   const menuToggle = document.querySelector('#menuToggle');
   const mobileNav = document.querySelector('#mobileNav');
@@ -54,7 +193,8 @@
   }
 
   function searchForm(text = '', secondary = false) {
-    if (secondary) return `<form class="search-content__controls" data-search-form role="search"><input name="q" aria-label="Buscar información territorial" type="search" value="${safe(text)}" placeholder="Busca un visor, vía, parque o tema..." required><button class="button-primary" type="submit">Buscar</button></form>`;
+    if (secondary)
+      return `<form class="search-content__controls" data-search-form role="search"><input name="q" aria-label="Buscar información territorial" type="search" value="${safe(text)}" placeholder="Busca un visor, vía, parque o tema..." required><button class="button-primary" type="submit">Buscar</button></form>`;
     return `<form class="hero-search" data-search-form role="search" aria-label="Buscar visores o información">
       ${icon('search')}<input name="q" type="search" aria-label="Buscar visores, temas o información" placeholder="Buscar visores, temas o información..." autocomplete="off" required>
       <button type="submit"><span>Buscar</span>${icon('arrow')}</button>
@@ -64,7 +204,7 @@
   function homeHTML() {
     return `<div class="home-view">
       <section class="hero" aria-labelledby="heroTitle"><div class="container hero__inner"><div class="hero__content">
-        <span class="eyebrow hero__eyebrow">TERRITORIO · DATOS · PLANIFICACIÓN</span>
+        <span class="eyebrow hero__eyebrow">Ciencia de Datos Espaciales para el Planeamiento Urbano</span>
         <h1 id="heroTitle">Conocer la ciudad.<br>Construir su futuro.</h1>
         <p class="hero__description">Explora San Borja, comprende su planificación y accede al conocimiento territorial a través de visores urbanos, análisis espacial y datos abiertos.</p>
         ${searchForm()}
@@ -105,16 +245,18 @@
   }
 
   function categoryHTML(id) {
-    const category = CATEGORIES.find(c => c.id === id);
+    const category = CATEGORIES.find((c) => c.id === id);
     if (!category) return notFoundHTML();
-    const linked = [...VIEWERS, ...EXTRA_RESOURCES].filter(v => v.categories.includes(category.id));
+    const linked = [...VIEWERS, ...EXTRA_RESOURCES].filter((v) =>
+      v.categories.includes(category.id)
+    );
     return `${categoryHero(category)}<section class="container internal-content">
       <a class="back-link" href="#inicio" data-home>${icon('back')} Volver al inicio</a>
       <h2 class="block-title">Información principal</h2>
       <div class="info-grid">${category.info.map(([ic, label]) => `<div class="info-tile">${icon(ic)}<strong>${safe(label)}</strong></div>`).join('')}</div>
       <h2 class="block-title related-title">Visores y recursos relacionados</h2>
       <div class="related-list">${linked.map(resourceCard).join('')}</div>
-      ${linked.some(v => !v.url) ? `<div class="info-message">${icon('info')}<span>Los recursos señalados como <strong>Próximamente</strong> aún no tienen un enlace de consulta habilitado. No se muestran descargas ni datos ficticios.</span></div>` : ''}
+      ${linked.some((v) => !v.url) ? `<div class="info-message">${icon('info')}<span>Los recursos señalados como <strong>Próximamente</strong> aún no tienen un enlace de consulta habilitado. No se muestran descargas ni datos ficticios.</span></div>` : ''}
     </section>`;
   }
 
@@ -126,32 +268,123 @@
 
   function infoPageHTML(name) {
     const configs = {
-      'datos-abiertos': { title: 'Datos abiertos', desc: 'Acceso a información geográfica y datos espaciales del territorio.', icon: 'database', items: [['Zonificación urbana', 'Delimitaciones y categorías de zonificación.', 'layers'], ['Red vial y secciones', 'Información territorial del sistema vial local.', 'route'], ['Espacios públicos', 'Capas e inventario geográfico de áreas públicas.', 'tree']], notice: 'El catálogo público y las descargas se habilitarán cuando los datos cuenten con validación, fuentes y condiciones de uso.' },
-      'planeamiento': { title: 'Planeamiento urbano', desc: 'Instrumentos, normas e información que orientan la gestión del territorio distrital.', icon: 'file', items: [['Uso del suelo', 'Clasificación del suelo y compatibilidades.', 'building', 'uso-suelo'], ['Movilidad', 'Red vial, jerarquía y secciones urbanas.', 'car', 'movilidad'], ['Normativa urbana', 'Parámetros, reglamentos y documentos.', 'file', 'normativa']], notice: 'Selecciona un tema para consultar los visores relacionados. Algunas herramientas se encuentran pendientes de publicación.' },
-      'nosotros': { title: 'Nosotros', desc: 'Conoce la Unidad de Planeamiento Urbano de San Borja y sus herramientas territoriales.', icon: 'users', items: [['Unidad de Planeamiento Urbano', 'Información y herramientas para el planeamiento territorial.', 'building'], ['Innovación y datos espaciales', 'Uso de información geográfica para apoyar decisiones urbanas.', 'database'], ['Servicio a la ciudadanía', 'Acceso organizado a visores geográficos e información pública.', 'users']], notice: 'UPU San Borja · Unidad de Planeamiento Urbano · Oficina General de Innovación y Desarrollo Económico · Municipalidad de San Borja.' }
+      'datos-abiertos': {
+        title: 'Datos abiertos',
+        desc: 'Acceso a información geográfica y datos espaciales del territorio.',
+        icon: 'database',
+        items: [
+          [
+            'Zonificación urbana',
+            'Delimitaciones y categorías de zonificación.',
+            'layers',
+          ],
+          [
+            'Red vial y secciones',
+            'Información territorial del sistema vial local.',
+            'route',
+          ],
+          [
+            'Espacios públicos',
+            'Capas e inventario geográfico de áreas públicas.',
+            'tree',
+          ],
+        ],
+        notice:
+          'El catálogo público y las descargas se habilitarán cuando los datos cuenten con validación, fuentes y condiciones de uso.',
+      },
+      planeamiento: {
+        title: 'Planeamiento urbano',
+        desc: 'Instrumentos, normas e información que orientan la gestión del territorio distrital.',
+        icon: 'file',
+        items: [
+          [
+            'Uso del suelo',
+            'Clasificación del suelo y compatibilidades.',
+            'building',
+            'uso-suelo',
+          ],
+          [
+            'Movilidad',
+            'Red vial, jerarquía y secciones urbanas.',
+            'car',
+            'movilidad',
+          ],
+          [
+            'Normativa urbana',
+            'Parámetros, reglamentos y documentos.',
+            'file',
+            'normativa',
+          ],
+        ],
+        notice:
+          'Selecciona un tema para consultar los visores relacionados. Algunas herramientas se encuentran pendientes de publicación.',
+      },
+      nosotros: {
+        title: 'Nosotros',
+        desc: 'Conoce la Unidad de Planeamiento Urbano de San Borja y sus herramientas territoriales.',
+        icon: 'users',
+        items: [
+          [
+            'Unidad de Planeamiento Urbano',
+            'Información y herramientas para el planeamiento territorial.',
+            'building',
+          ],
+          [
+            'Innovación y datos espaciales',
+            'Uso de información geográfica para apoyar decisiones urbanas.',
+            'database',
+          ],
+          [
+            'Servicio a la ciudadanía',
+            'Acceso organizado a visores geográficos e información pública.',
+            'users',
+          ],
+        ],
+        notice:
+          'UPU San Borja · Unidad de Planeamiento Urbano · Oficina General de Innovación y Desarrollo Económico · Municipalidad de San Borja.',
+      },
     };
     const data = configs[name];
     if (!data) return notFoundHTML();
+    if (name === 'nosotros') {
+      return `${categoryHero({ title: data.title, description: data.desc, icon: data.icon }, 'UPU San Borja')}
+        <section class="container internal-content about-content" aria-labelledby="about-title">
+          <a href="#inicio" data-home class="back-link">${icon('back')} Volver al inicio</a>
+          <h2 class="block-title" id="about-title">Nuestra iniciativa</h2>
+          <p class="about-intro">UPU San Borja es una iniciativa impulsada por la Oficina General de Innovación y Desarrollo Económico (OGIDE) de la Municipalidad de San Borja, a través del trabajo técnico de la Unidad de Planeamiento Urbano.</p>
+          <section class="about-mission" aria-labelledby="mission-title">
+            <h3 id="mission-title">Nuestra misión</h3>
+            <p>Facilitar el acceso público a información territorial, promover la ciencia de datos espaciales y contribuir al planeamiento urbano basado en evidencia, con transparencia e innovación.</p>
+          </section>
+        </section>`;
+    }
     return `${categoryHero({ title: data.title, description: data.desc, icon: data.icon }, 'UPU San Borja')}
       <section class="container internal-content"><a href="#inicio" data-home class="back-link">${icon('back')} Volver al inicio</a>
         <h2 class="block-title">${data.title === 'Nosotros' ? 'Nuestra iniciativa' : 'Información principal'}</h2>
         <div class="related-list">${data.items.map(([title, desc, ic, category]) => `<article class="related-card"><div class="related-card__thumb">${icon(ic)}</div><div class="related-card__content"><strong>${safe(title)}</strong><p>${safe(desc)}</p></div>${category ? `<a class="related-card__cta" href="#categoria/${category}" aria-label="Explorar ${safe(title)}"><span>Explorar</span>${icon('arrow')}</a>` : `<span class="related-card__cta disabled" aria-label="Contenido informativo">${icon('info')}</span>`}</article>`).join('')}</div>
-        <div class="info-message">${icon('info')}<span>${safe(data.notice)}</span></div>
       </section>`;
   }
 
   function searchHTML(searchTerm) {
     const term = normalize(searchTerm);
-    const categories = CATEGORIES.filter(c => normalize([c.title, c.short, c.description].join(' ')).includes(term));
-    const viewers = VIEWERS.filter(v => normalize([v.title, v.label, v.description].join(' ')).includes(term));
+    const categories = CATEGORIES.filter((c) =>
+      normalize([c.title, c.short, c.description].join(' ')).includes(term)
+    );
+    const viewers = VIEWERS.filter((v) =>
+      normalize([v.title, v.label, v.description].join(' ')).includes(term)
+    );
     return `<section class="container search-content"><a class="back-link" href="#inicio" data-home>${icon('back')} Volver al inicio</a>
       <div class="eyebrow">EXPLORA SAN BORJA</div><h1 class="section-heading">Resultados de búsqueda</h1>
       <p class="section-lead">Encuentra temas y visores disponibles desde la plataforma UPU.</p>
       ${searchForm(searchTerm, true)}
-      ${!categories.length && !viewers.length ? `<div class="empty-state">${icon('search')}<strong>No se encontraron resultados</strong><p>Prueba con otros términos, por ejemplo: vías, parques, usos o normativa.</p></div>` : `
-        ${categories.length ? `<h2 class="results-title">Temas (${categories.length})</h2><div class="category-grid">${categories.map(c => categoryCard(c, CATEGORIES.indexOf(c))).join('')}</div>` : ''}
+      ${
+        !categories.length && !viewers.length
+          ? `<div class="empty-state">${icon('search')}<strong>No se encontraron resultados</strong><p>Prueba con otros términos, por ejemplo: vías, parques, usos o normativa.</p></div>`
+          : `
+        ${categories.length ? `<h2 class="results-title">Temas (${categories.length})</h2><div class="category-grid">${categories.map((c) => categoryCard(c, CATEGORIES.indexOf(c))).join('')}</div>` : ''}
         ${viewers.length ? `<h2 class="results-title" style="margin-top:32px">Visores (${viewers.length})</h2><div class="viewer-grid">${viewers.map(viewerCard).join('')}</div>` : ''}
-      `}</section>`;
+      `
+      }</section>`;
   }
 
   function notFoundHTML() {
@@ -178,25 +411,44 @@
     closeMenu();
     const route = decodeURIComponent(location.hash.slice(1) || 'inicio');
     if (route === 'inicio' || route === '') main.innerHTML = homeHTML();
-    else if (route.startsWith('categoria/')) main.innerHTML = categoryHTML(route.slice('categoria/'.length));
+    else if (route.startsWith('categoria/'))
+      main.innerHTML = categoryHTML(route.slice('categoria/'.length));
     else if (route === 'visores') main.innerHTML = viewAllHTML();
-    else if (route.startsWith('buscar/')) main.innerHTML = searchHTML(route.slice('buscar/'.length));
-    else if (['datos-abiertos', 'planeamiento', 'nosotros'].includes(route)) main.innerHTML = infoPageHTML(route);
+    else if (route.startsWith('buscar/'))
+      main.innerHTML = searchHTML(route.slice('buscar/'.length));
+    else if (['datos-abiertos', 'planeamiento', 'nosotros'].includes(route))
+      main.innerHTML = infoPageHTML(route);
     else main.innerHTML = notFoundHTML();
-    document.title = (route === 'inicio' ? 'UPU San Borja | Planeamiento Urbano' : 'UPU San Borja | ' + (CATEGORIES.find(c => route.endsWith(c.id))?.title || route.split('/')[0]));
-    document.querySelectorAll('.desktop-nav a').forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + route));
+    document.title =
+      route === 'inicio'
+        ? 'UPU San Borja | Planeamiento Urbano'
+        : 'UPU San Borja | ' +
+          (CATEGORIES.find((c) => route.endsWith(c.id))?.title ||
+            route.split('/')[0]);
+    document
+      .querySelectorAll('.desktop-nav a')
+      .forEach((a) =>
+        a.classList.toggle('is-active', a.getAttribute('href') === '#' + route)
+      );
     if (scroll) window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
-  menuToggle.addEventListener('click', event => { event.stopPropagation(); toggleMenu(); });
-  document.addEventListener('click', event => {
+  menuToggle.addEventListener('click', (event) => {
+    event.stopPropagation();
+    toggleMenu();
+  });
+  document.addEventListener('click', (event) => {
     const explore = event.target.closest('[data-explore]');
     if (explore) {
       event.preventDefault();
       closeMenu();
       if (location.hash !== '#inicio') location.hash = 'inicio';
       renderRoute(false);
-      requestAnimationFrame(() => document.getElementById('descubre')?.scrollIntoView({ behavior: 'smooth', block: 'start' }));
+      requestAnimationFrame(() =>
+        document
+          .getElementById('descubre')
+          ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      );
       return;
     }
     const home = event.target.closest('[data-home]');
@@ -207,9 +459,10 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
-    if (!mobileNav.hidden && !event.target.closest('.mobile-nav, #menuToggle')) closeMenu();
+    if (!mobileNav.hidden && !event.target.closest('.mobile-nav, #menuToggle'))
+      closeMenu();
   });
-  document.addEventListener('submit', event => {
+  document.addEventListener('submit', (event) => {
     const form = event.target.closest('form[data-search-form]');
     if (!form) return;
     event.preventDefault();
@@ -219,19 +472,89 @@
     if (location.hash === '#buscar/' + encodeURIComponent(q)) renderRoute();
   });
   window.addEventListener('hashchange', () => renderRoute());
-  window.addEventListener('resize', () => { if (window.innerWidth > 850) closeMenu() });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu() });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 850) closeMenu();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeMenu();
+  });
 
-  // Intro institucional. Se ejecuta en cada carga de página, con opción de omitir.
+  // Intro institucional con transición automática al logo del header.
   const intro = document.querySelector('#intro');
   let introTimeout;
-  function dismissIntro() {
-    if (!intro || intro.classList.contains('is-hidden')) return;
-    intro.classList.add('is-hidden');
+  let introClosing = false;
+  async function dismissIntro() {
+    if (!intro || introClosing) return;
+    introClosing = true;
     clearTimeout(introTimeout);
-    setTimeout(() => intro.remove(), 650);
+    const source = intro.querySelector('.intro__halo img');
+    const destination = document.querySelector('.brand-mark img');
+    if (
+      !source ||
+      !destination ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      !source.animate
+    ) {
+      intro.remove();
+      return;
+    }
+    const start = source.getBoundingClientRect();
+    const end = destination.getBoundingClientRect();
+    const targetStyle = getComputedStyle(destination);
+    const targetVisibility = destination.style.visibility;
+    const flyingLogo = source.cloneNode(true);
+    flyingLogo.setAttribute('aria-hidden', 'true');
+    Object.assign(flyingLogo.style, {
+      position: 'fixed',
+      zIndex: '151',
+      margin: '0',
+      animation: 'none',
+      pointerEvents: 'none',
+      left: `${start.left}px`,
+      top: `${start.top}px`,
+      width: `${start.width}px`,
+      height: `${start.height}px`,
+      objectFit: 'contain',
+      maxWidth: 'none',
+      maxHeight: 'none',
+      background: 'transparent',
+      boxShadow: 'none',
+      borderRadius: '0',
+    });
+    document.body.append(flyingLogo);
+    source.style.visibility = 'hidden';
+    destination.style.visibility = 'hidden';
+    intro.classList.add('is-hidden');
+    try {
+      await flyingLogo.animate(
+        [
+          {
+            left: `${start.left}px`,
+            top: `${start.top}px`,
+            width: `${start.width}px`,
+            height: `${start.height}px`,
+            filter: 'brightness(0) invert(1)',
+          },
+          {
+            left: `${end.left}px`,
+            top: `${end.top}px`,
+            width: `${end.width}px`,
+            height: `${end.height}px`,
+            filter: targetStyle.filter,
+          },
+        ],
+        {
+          duration: 850,
+          easing: 'cubic-bezier(.65, 0, .25, 1)',
+          fill: 'forwards',
+        }
+      ).finished;
+    } finally {
+      destination.style.visibility = targetVisibility;
+      flyingLogo.remove();
+      intro.remove();
+    }
   }
-  document.querySelector('#skipIntro').addEventListener('click', dismissIntro);
   introTimeout = setTimeout(dismissIntro, 1700);
 
   renderRoute(false);

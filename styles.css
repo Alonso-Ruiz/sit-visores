@@ -115,13 +115,11 @@ input:focus-visible {
 }
 
 .brand-mark {
-    width: 51px;
-    height: 51px;
-    background: #07503e;
-    border-radius: 15px;
+    width: max-content;
+    height: 27px;
+    flex-shrink: 0;
     display: grid;
     place-items: center;
-    box-shadow: inset 0 -7px 12px #00281e29;
     color: #fff;
     font-family: Manrope, sans-serif;
     font-weight: 800;
@@ -130,15 +128,17 @@ input:focus-visible {
 }
 
 .brand-mark img {
-    width: 78%;
-    height: auto;
-    object-fit: contain
+    width: auto;
+    height: 100%;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(23%) sepia(32%) saturate(1289%) hue-rotate(112deg) brightness(91%) contrast(97%)
 }
 
 .brand-copy {
     display: flex;
     flex-direction: column;
-    gap: 3px
+    gap: 4px;
+    line-height: 1
 }
 
 .brand-copy strong {
@@ -150,10 +150,33 @@ input:focus-visible {
 }
 
 .brand-copy small {
-    font-size: 10px;
-    font-weight: 800;
-    letter-spacing: 1.3px;
-    color: #66717a
+    font-family: Manrope, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .2px;
+    color: #064b3b
+}
+
+.about-intro,
+.about-mission p {
+    margin: 0;
+    color: #60726d;
+    font-size: 14px;
+    line-height: 1.85;
+}
+
+.about-mission {
+    margin-top: 30px;
+    padding: clamp(20px, 3vw, 28px);
+    border: 1px solid #e2eae5;
+    border-radius: 18px;
+    background: #f5f8f6;
+}
+
+.about-mission h3 {
+    margin: 0 0 10px;
+    color: #193e35;
+    font: 800 17px/1.4 Manrope, sans-serif;
 }
 
 .desktop-nav {
@@ -285,10 +308,10 @@ input:focus-visible {
     position: fixed;
     z-index: 150;
     inset: 0;
-    background: linear-gradient(150deg, #fff, #eaf6ef);
+    background: #07503e;
     display: grid;
     place-items: center;
-    transition: opacity .55s ease, visibility .55s ease
+    transition: opacity .7s ease, visibility .7s ease
 }
 
 .intro.is-hidden {
@@ -305,11 +328,8 @@ input:focus-visible {
 }
 
 .intro__halo {
-    height: 153px;
-    width: 153px;
-    background: var(--forest);
-    border-radius: 50%;
-    box-shadow: 0 0 0 16px #d9eee3, 0 0 0 37px #e6f5ec;
+    height: 106px;
+    width: min(287px, 76vw);
     display: grid;
     place-items: center;
     animation: intro-appear .7s both
@@ -317,7 +337,7 @@ input:focus-visible {
 
 .intro__halo img {
     height: auto;
-    width: 110px;
+    width: 100%;
     object-fit: contain
 }
 
@@ -325,7 +345,7 @@ input:focus-visible {
     font-size: 17px;
     font-family: Manrope, sans-serif;
     font-weight: 800;
-    color: var(--green-deep);
+    color: #fff;
     letter-spacing: .04em;
     margin: 48px 0 6px
 }
@@ -334,11 +354,11 @@ input:focus-visible {
     font-size: 10px;
     font-weight: 800;
     letter-spacing: .17em;
-    color: #658478
+    color: #d0eadf
 }
 
 .intro__progress {
-    background: #d6e7de;
+    background: #ffffff30;
     width: 150px;
     height: 3px;
     margin-top: 28px;
@@ -351,26 +371,9 @@ input:focus-visible {
     display: block;
     height: 100%;
     width: 100%;
-    background: var(--green);
+    background: #b8e8cc;
     transform-origin: left;
     animation: progress 1.55s linear forwards
-}
-
-.intro__skip {
-    position: absolute;
-    right: 32px;
-    bottom: 29px;
-    border: 0;
-    background: transparent;
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    color: #587269;
-    font-size: 12px
-}
-
-.intro__skip .icon {
-    width: 15px
 }
 
 .intro~* {
@@ -1307,6 +1310,38 @@ input:focus-visible {
     vertical-align: middle
 }
 
+.footer-contact {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 4px 18px;
+    margin: 5px 0;
+    font-style: normal;
+    font-size: 11px;
+    line-height: 1.6;
+    color: #52625e;
+}
+
+.footer-copy .footer-contact>span {
+    color: #52625e;
+}
+
+.footer-contact a {
+    font-weight: 600;
+    color: #07503e;
+    text-underline-offset: 4px;
+}
+
+.footer-contact a:hover {
+    text-decoration: underline;
+}
+
+@media(min-width:601px) and (max-width:850px) {
+    .footer-contact {
+        justify-content: flex-end;
+    }
+}
+
 @media(max-width:1050px) {
     .header-inner {
         gap: 15px
@@ -1320,9 +1355,12 @@ input:focus-visible {
         font-size: 17px
     }
 
+    .brand-copy small {
+        font-size: 11px
+    }
+
     .brand-mark {
-        height: 45px;
-        width: 45px
+        height: 25px
     }
 
     .institutional-brand small {
@@ -1446,9 +1484,7 @@ input:focus-visible {
     }
 
     .brand-mark {
-        width: 37px;
-        height: 37px;
-        border-radius: 11px
+        height: 24px
     }
 
     .brand-mark {
@@ -1456,13 +1492,13 @@ input:focus-visible {
     }
 
     .brand-copy strong {
-        font-size: 14px;
+        font-size: 16px;
         letter-spacing: -.45px
     }
 
     .brand-copy small {
-        font-size: 7px;
-        letter-spacing: .65px
+        font-size: 10px;
+        letter-spacing: .1px
     }
 
     .header-right {
@@ -1861,19 +1897,19 @@ input:focus-visible {
         font-size: 9px
     }
 
-    .intro__skip {
-        bottom: 15px;
-        right: 17px
-    }
 }
 
 @media(max-width:370px) {
+    .brand-mark {
+        height: 22px
+    }
+
     .brand-copy strong {
-        font-size: 12.5px
+        font-size: 14px
     }
 
     .brand-copy small {
-        font-size: 6.2px
+        font-size: 9px
     }
 
     .header-right {
