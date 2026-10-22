@@ -1,161 +1,176 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-color" content="#064d41">
-    <meta name="description"
-        content="Explora los sistemas de información territorial de la Municipalidad de San Borja.">
-    <title>SIT San Borja | Sistemas de Información Territorial</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-
-    
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/fontawesome.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/solid.min.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description"
+    content="UPU San Borja. Explora el territorio a través de visores geográficos, datos y herramientas de planeamiento urbano.">
+  <title>UPU San Borja | Planeamiento Urbano</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="app.js"></script>
 </head>
 
 <body>
-    <header class="header" id="inicio"><a href="#inicio" class="header-brand" aria-label="Unidad de Planeamiento Urbano, inicio"><img class="upu-logo" src="assets/upu-logo.svg" alt=""><span class="upu-name">Unidad de<br>Planeamiento Urbano</span></a>
-        <div class="header-ogide"><strong>OGIDE</strong><span>Oficina General de Innovación<br>y Desarrollo Económico</span></div>
-        <div class="header-city"><div class="city-crest" aria-hidden="true"><img src="assets/municipalidad-san-borja.png" alt=""></div><span class="city-name">Municipalidad<br>de San Borja</span></div>
-    </header>
-    <main class="page">
-        <section class="hero" aria-labelledby="main-title">
-            <div class="hero-main">
-                <h1 id="main-title">Sistema de<br><em>Información Territorial</em></h1>
-                <p class="subtitle">Visores geográficos para consulta de información pública.</p>
-            </div>
-        </section>
-        <section class="search-area" aria-labelledby="property-search-title">
-            <div class="search-heading">
-                <div><h2 id="property-search-title">Busca un visor o un dato</h2><p>Busca por actividad, parque, vía, tramo, cuadrante o código.</p></div>
-            </div>
-            <form id="property-search-form" class="property-search-form" autocomplete="off">
-                <div class="address-wrap">
-                    <i class="address-icon fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                    <label class="sr-only" for="address-search">Buscar visores o datos reales</label>
-                    <input id="address-search" type="search" placeholder="Ej.: tramo de Enrique Meiggs, Parque El Pinar o N-41" aria-expanded="false" aria-controls="address-suggestions">
-                    <button id="clear-search" class="address-clear" type="button" aria-label="Borrar búsqueda" title="Borrar búsqueda"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
-                    <div id="address-suggestions" class="address-suggestions" role="listbox" hidden></div>
-                </div>
-                <button class="consult-button" type="submit">Buscar <span aria-hidden="true">↗</span></button>
-            </form>
-        </section>
-        <section id="data-search-details" class="parcel-workspace data-result-workspace" aria-live="polite" hidden></section>
-        <section class="catalog" id="visores" aria-label="Catálogo de visores">
-            <div class="catalog-toolbar"><div class="catalog-heading"><h2>Explora los visores</h2><p>También puedes ingresar directamente por tema.</p></div>
-                <div class="filters" role="group" aria-label="Filtrar visores"><button class="filter active"
-                        data-category="todos" aria-pressed="true">Todos</button><button class="filter"
-                        data-category="suelo" aria-pressed="false">Uso del suelo</button><button class="filter"
-                        data-category="movilidad" aria-pressed="false">Movilidad</button><button class="filter"
-                        data-category="espacio" aria-pressed="false">Espacio público</button></div>
-            </div>
-            <div id="cardGrid" class="cards">
-                <div class="card" data-visor-id="parametros" data-category="planeamiento normativa"
-                    data-text="parametros urbanisticos edificatorios pue suelo edificacion">
-                    <div class="card-image" aria-hidden="true"></div>
-                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-parametros.svg" alt=""></div>
-                    <div class="card-content"><h2>Parámetros Urbanísticos y Edificatorios</h2>
-                        <p>Condiciones de uso y edificación aplicables a los predios.</p><span class="status">Enlace por
-                            incorporar</span>
-                    </div>
-                </div>
-                <a class="card short" data-visor-id="usos" href="https://mapausoscompatible.netlify.app/" target="_blank"
-                    rel="noopener noreferrer" data-category="planeamiento suelo"
-                    data-text="indice usos ubicación actividades urbanas compatible zonificacion uso suelo">
-                    <div class="card-image" aria-hidden="true"></div>
-                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-usos.svg" alt=""></div>
-                    <div class="card-content">
-                        <h2>Índice de Usos para la Ubicación de Actividades Urbanas</h2>
-                        <p>Consulta las actividades urbanas y su localización en el distrito.</p><span
-                            class="card-link">Abrir visor <span>↗</span></span>
-                    </div><span class="card-arrow" aria-hidden="true">↗</span>
-                </a>
-                <div class="card mid" data-visor-id="residencial" data-category="planeamiento suelo"
-                    data-text="compatibilidad usos zonas residenciales cuzr">
-                    <div class="card-image" aria-hidden="true"></div>
-                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-residencial.svg" alt=""></div>
-                    <div class="card-content">
-                        <h2>Compatibilidad de Usos para Zonas Residenciales</h2>
-                        <p>Condiciones de compatibilidad de actividades en zonificación residencial.</p><span
-                            class="status">Enlace por incorporar</span>
-                    </div>
-                </div>
-                <div class="card mid" data-visor-id="operacion" data-category="planeamiento normativa"
-                    data-text="niveles operacionales estandares calidad actividades">
-                    <div class="card-image" aria-hidden="true"></div>
-                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-calidad.svg" alt=""></div>
-                    <div class="card-content">
-                        <h2>Niveles Operacionales y Estándares de Calidad</h2>
-                        <p>Condiciones de funcionamiento de las actividades urbanas.</p><span class="status">Enlace por
-                            incorporar</span>
-                    </div>
-                </div>
-                <a class="card short" data-visor-id="vias" href="https://sistemavial.msb.gob.pe/" target="_blank"
-                    rel="noopener noreferrer" data-category="movilidad"
-                    data-text="vias locales secciones viales sistema vial movilidad">
-                    <div class="card-image" aria-hidden="true"></div>
-                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-vias.svg" alt=""></div>
-                    <div class="card-content">
-                        <h2>Vías Locales y Secciones Viales</h2>
-                        <p>Explora la red vial y sus secciones características.</p><span class="card-link">Abrir visor
-                            <span>↗</span></span>
-                    </div><span class="card-arrow" aria-hidden="true">↗</span>
-                </a>
-                <a class="card short" data-visor-id="slo" href="https://visorslo.netlify.app/" target="_blank" rel="noopener noreferrer"
-                    data-category="suelo" data-text="superficies limitadoras obstaculos slo base aerea las palmas">
-                    <div class="card-image" aria-hidden="true"></div>
-                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-slo.svg" alt=""></div>
-                    <div class="card-content">
-                        <h2>Superficies Limitadoras de Obstáculos (SLO)</h2>
-                        <p>Restricciones en el entorno de la Base Aérea Las Palmas.</p><span class="card-link">Abrir
-                            visor <span>↗</span></span>
-                    </div><span class="card-arrow" aria-hidden="true">↗</span>
-                </a>
-                <a class="card short" data-visor-id="espacios" href="https://espaciospublicosmsb.netlify.app/" target="_blank"
-                    rel="noopener noreferrer" data-category="espacio"
-                    data-text="espacios publicos parques plazas areas verdes">
-                    <div class="card-image" aria-hidden="true"></div>
-                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-parques.svg" alt=""></div>
-                    <div class="card-content">
-                        <h2>Espacios Públicos</h2>
-                        <p>Consulta parques, plazas y espacios públicos del distrito.</p><span class="card-link">Abrir
-                            visor <span>↗</span></span>
-                    </div><span class="card-arrow" aria-hidden="true">↗</span>
-                </a>
-                <a class="card short" data-visor-id="soterrados" href="https://inventariodiestra2026.netlify.app/" target="_blank" rel="noopener noreferrer" data-category="espacio" data-text="soterrados contenedores residuos basura inventario diestra">
-                    <div class="card-image" aria-hidden="true"></div>
-                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-soterrados.svg" alt=""></div>
-                    <div class="card-content"><h2>Soterrados</h2><p>Consulta el inventario de contenedores soterrados del distrito.</p><span class="card-link">Abrir visor <span>↗</span></span></div><span class="card-arrow" aria-hidden="true">↗</span>
-                </a>
-                <a class="card short" data-visor-id="convenios" href="https://visor-convenio.netlify.app/" target="_blank" rel="noopener noreferrer" data-category="espacio" data-text="visores convenios convenio">
-                    <div class="card-image" aria-hidden="true"></div>
-                    <div class="card-illustration" aria-hidden="true"><img src="assets/visor-convenios.svg" alt=""></div>
-                    <div class="card-content">
-                        <h2>Visores Convenios</h2>
-                        <p>Consulta información geográfica relacionada con convenios.</p><span class="card-link">Abrir visor <span>↗</span></span>
-                    </div><span class="card-arrow" aria-hidden="true">↗</span>
-                </a>
-            </div>
-            <div class="empty" id="empty" hidden>No se encontraron visores. Prueba otra búsqueda o categoría.</div>
-        </section>
-    </main>
-    <footer class="site-footer">
-        <div class="footer-copyright"><strong>© 2026 Municipalidad de San Borja</strong><p>Todos los derechos reservados.</p></div>
-        <div class="footer-links"><span>Sistema de Información Territorial</span><a href="https://www.gob.pe/113597-sistemas-de-informacion-territorial" target="_blank" rel="noopener noreferrer">Información institucional <span aria-hidden="true">↗</span></a></div>
-        <a class="back-top" href="#inicio">Volver arriba ↑</a>
-    </footer>
-    <script src="data/search-data-loader.js"></script>
-    <script src="script.js"></script>
+  <!-- Iconos SVG propios, independientes de bibliotecas externas -->
+  <svg class="svg-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <symbol id="i-search" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="7" />
+      <path d="m20 20-4-4" />
+    </symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24">
+      <path d="M5 12h14m-6-6 6 6-6 6" />
+    </symbol>
+    <symbol id="i-arrow-up" viewBox="0 0 24 24">
+      <path d="M7 17 17 7M8 7h9v9" />
+    </symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24">
+      <path d="m9 18 6-6-6-6" />
+    </symbol>
+    <symbol id="i-back" viewBox="0 0 24 24">
+      <path d="M19 12H5m6-6-6 6 6 6" />
+    </symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24">
+      <path d="M4 7h16M4 12h16M4 17h16" />
+    </symbol>
+    <symbol id="i-close" viewBox="0 0 24 24">
+      <path d="m6 6 12 12M18 6 6 18" />
+    </symbol>
+    <symbol id="i-building" viewBox="0 0 24 24">
+      <path d="M3 21h18M5 21V7l6-3v17M11 21V3l8 4v14M7.5 9h1M7.5 13h1M14 9h2M14 13h2M14 17h2" />
+    </symbol>
+    <symbol id="i-car" viewBox="0 0 24 24">
+      <path d="m5 17-1 2v1m15-3 1 2v1M5 16H3v-5l3-6h12l3 6v5h-2M5 16h14M3 11h18M6 16h2m8 0h2" />
+    </symbol>
+    <symbol id="i-tree" viewBox="0 0 24 24">
+      <path
+        d="M12 21v-8m0 3c-2.5 2-7 1-8-2.5-1-2.5.5-4.5 2.5-5-.5-3.5 2-6 5.5-6S17.5 3 17 6.5c2 .5 3.5 2.5 2.5 5S17.5 18 12 16Z" />
+    </symbol>
+    <symbol id="i-file" viewBox="0 0 24 24">
+      <path d="M6 2h8l5 5v15H6zM14 2v5h5M9 12h7M9 16h7" />
+    </symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24">
+      <path d="m12 3 9 5-9 5-9-5 9-5Zm-9 9 9 5 9-5M3 16l9 5 9-5" />
+    </symbol>
+    <symbol id="i-map" viewBox="0 0 24 24">
+      <path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5ZM9 3v16M15 5v16" />
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24">
+      <circle cx="9" cy="8" r="3" />
+      <path d="M3 20v-2a6 6 0 0 1 12 0v2m3-13a3 3 0 0 1 0 6m0 2a5 5 0 0 1 3 5" />
+    </symbol>
+    <symbol id="i-route" viewBox="0 0 24 24">
+      <circle cx="6" cy="18" r="2" />
+      <circle cx="18" cy="6" r="2" />
+      <path d="M8 18h7a4 4 0 0 0 0-8H9a4 4 0 0 1 0-8h7" />
+    </symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24">
+      <path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Zm-4-11 3 3 5-5" />
+    </symbol>
+    <symbol id="i-database" viewBox="0 0 24 24">
+      <ellipse cx="12" cy="5" rx="9" ry="3" />
+      <path d="M3 5v14c0 4 18 4 18 0V5M3 12c0 4 18 4 18 0" />
+    </symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24">
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </symbol>
+    <symbol id="i-info" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 11v6M12 7h.01" />
+    </symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 2" />
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24">
+      <path d="m4 12 5 5L20 6" />
+    </symbol>
+  </svg>
+
+  <div class="intro" id="intro" aria-label="Presentación de UPU San Borja">
+    <div class="intro__content">
+      <div class="intro__halo"><img src="assets/upu-logo.svg" alt="UPU" width="287" height="106"></div>
+      <p>MUNICIPALIDAD DE SAN BORJA</p><span>UNIDAD DE PLANEAMIENTO URBANO</span>
+      <div class="intro__progress"></div>
+    </div>
+    <button class="intro__skip" id="skipIntro" type="button">Omitir introducción <svg class="icon">
+        <use href="#i-arrow" />
+      </svg></button>
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" data-home aria-label="UPU San Borja, ir al inicio">
+        <span class="brand-mark" aria-hidden="true"><img src="assets/upu-logo.svg" alt="" width="287" height="106"></span>
+        <span class="brand-copy"><strong>UPU San Borja</strong><small>PLANEAMIENTO URBANO</small></span>
+      </a>
+      <nav class="desktop-nav" aria-label="Navegación principal">
+        <a href="#inicio" data-explore>Explora</a>
+        <a href="#datos-abiertos">Datos abiertos</a>
+        <a href="#planeamiento">Planeamiento</a>
+        <a href="#nosotros">Nosotros</a>
+      </nav>
+      <div class="header-right">
+        <a href="#nosotros" class="institutional-brand"
+          aria-label="Oficina General de Innovación y Desarrollo Económico de la Municipalidad de San Borja">
+          <img src="assets/escudo-san-borja.png" alt="Escudo de San Borja">
+          <span><strong>OGIDE</strong><small>Municipalidad de San Borja</small></span>
+        </a>
+        <button class="hamburger" type="button" id="menuToggle" aria-expanded="false" aria-controls="mobileNav"
+          aria-label="Abrir menú">
+          <svg class="icon">
+            <use href="#i-menu" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-nav" id="mobileNav" hidden>
+    <div class="container mobile-nav__inner">
+      <a href="#inicio" data-explore>Explora <svg class="icon">
+          <use href="#i-chevron" />
+        </svg></a>
+      <a href="#datos-abiertos">Datos abiertos <svg class="icon">
+          <use href="#i-chevron" />
+        </svg></a>
+      <a href="#planeamiento">Planeamiento <svg class="icon">
+          <use href="#i-chevron" />
+        </svg></a>
+      <a href="#nosotros">Nosotros <svg class="icon">
+          <use href="#i-chevron" />
+        </svg></a>
+      <div class="mobile-nav__institution"><img src="assets/escudo-san-borja.png" alt=""><span>OGIDE<br>Municipalidad de
+          San Borja</span></div>
+    </div>
+  </div>
+
+  <main id="mainContent" tabindex="-1">
+    <!-- app.js representa página principal, categorías y resultados de búsqueda -->
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <a href="#inicio" data-home class="footer-municipality"><img src="assets/escudo-san-borja.png"
+          alt="Escudo de la Municipalidad de San Borja"><span>MUNICIPALIDAD<br>DE SAN BORJA</span></a>
+      <div class="footer-copy"><strong>UPU San Borja</strong><span>Unidad de Planeamiento Urbano · Oficina General de
+          Innovación y Desarrollo Económico</span><small>Municipalidad de San Borja · 2026</small></div>
+      <div class="footer-links"><a href="#nosotros">Información institucional</a><a href="#inicio" data-home>Volver al
+          inicio <svg class="icon">
+            <use href="#i-arrow-up" />
+          </svg></a></div>
+    </div>
+  </footer>
 </body>
 
 </html>
-
-
-
