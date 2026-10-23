@@ -4,6 +4,7 @@
   'use strict';
 
   const CATEGORIES = [
+    // El simulador sigue el mismo recorrido de categoría que los demás temas.
     {
       id: 'uso-suelo',
       title: 'Uso del suelo',
@@ -57,6 +58,14 @@
       ],
     },
   ];
+
+  CATEGORIES.push({
+    id: 'cabida', title: 'Simular escenario urbano cabida',
+    short: 'Explora el potencial de un lote con PREDIAL.',
+    description: 'Configura un lote, ajusta sus parámetros y explora escenarios de cabida con el simulador PREDIAL.',
+    icon: 'cabida',
+    info: [['map', 'Geometría del lote'], ['layers', 'Parámetros y cabida'], ['cabida', 'Visualización 3D']]
+  });
 
   const VIEWERS = [
     {
@@ -247,6 +256,12 @@
   function categoryHTML(id) {
     const category = CATEGORIES.find((c) => c.id === id);
     if (!category) return notFoundHTML();
+    if (id === 'cabida') return `${categoryHero(category)}<section class="container internal-content">
+      <a class="back-link" href="#inicio" data-home>${icon('back')} Volver al inicio</a>
+      <h2 class="block-title">Explora un escenario de cabida</h2>
+      <div class="info-grid">${category.info.map(([ic, label]) => `<div class="info-tile">${icon(ic)}<strong>${label}</strong></div>`).join('')}</div>
+      <article class="predial-launch"><span class="predial-launch__icon">${icon('cabida')}</span><div><h2>Del lote a una posibilidad urbana</h2><p>Define la geometría, ajusta los parámetros y observa el escenario en 3D. Puedes importar tus archivos y explorar las herramientas del módulo.</p><small>Los resultados dependen de los parámetros ingresados. Requiere conexión a Internet.</small></div><button type="button" class="predial-open" data-open-predial>Abrir PREDIAL ${icon('arrow')}</button></article>
+    </section>`;
     const linked = [...VIEWERS, ...EXTRA_RESOURCES].filter((v) =>
       v.categories.includes(category.id)
     );
@@ -266,7 +281,39 @@
       <h2 class="block-title">Todos los visores</h2><div class="viewer-grid">${VIEWERS.map(viewerCard).join('')}</div></section>`;
   }
 
+  function planningPageHTML() {
+    const pud = 'https://www.gob.pe/institucion/munisanborja/informes-publicaciones/5745191-plan-urbano-distrital-del-distrito-de-san-borja-2020-2030';
+    const groups = [
+      { title: 'Nacional', scope: 'Marco normativo del Perú', icon: 'file', docs: [
+        { title: 'Ley N° 31313', type: 'Ley · DUS', desc: 'Ley de Desarrollo Urbano Sostenible: planificación urbana, uso y gestión del suelo.', source: 'El Peruano', url: 'https://busquedas.elperuano.pe/dispositivo/NL/1976352-2' },
+        { title: 'RATPUDUS', type: 'D. S. N° 012-2022-VIVIENDA', desc: 'Reglamento de Acondicionamiento Territorial y Planificación Urbana del Desarrollo Urbano Sostenible.', source: 'Ministerio de Vivienda', url: 'https://www.gob.pe/institucion/vivienda/normas-legales/3588833-012-2022-vivienda' },
+        { title: 'D. L. N° 1674', type: 'Decreto legislativo', desc: 'Modifica la Ley N° 31313, Ley de Desarrollo Urbano Sostenible.', source: 'El Peruano', url: 'https://busquedas.elperuano.pe/dispositivo/NL/2329855-10' },
+        { title: 'Plan Urbano Distrital de San Borja 2020–2030', type: 'Referencia · Ámbito distrital', desc: 'Acceso al PUD de San Borja, también disponible en la sección Distrital.', source: 'Municipalidad de San Borja', url: pud }
+      ] },
+      { title: 'Metropolitana', scope: 'Planificación de Lima Metropolitana', icon: 'map', docs: [
+        { title: 'PLANMET 2040', type: 'Plan metropolitano', desc: 'Plan de Desarrollo Metropolitano de Lima 2021–2040. Consulta documentos, planos y reglamento.', source: 'Instituto Metropolitano de Planificación', url: 'https://portal.imp.gob.pe/planificacion/plan-met-2040/' },
+        { title: 'Ordenanza N° 1063-MML', type: 'Ordenanza metropolitana', desc: 'Reajuste integral de la zonificación de los usos del suelo de San Borja. Disponible en el catálogo del IMP.', source: 'Instituto Metropolitano de Planificación', url: 'https://portal.imp.gob.pe/Normas_Urbanisticas/metropolitano/ordenanzas-san-borja.html', action: 'Ver catálogo oficial' },
+        { title: 'Ordenanza N° 2851-MML', type: 'Ordenanza metropolitana', desc: 'Índice de usos para la ubicación de actividades urbanas del distrito de San Borja.', source: 'El Peruano', url: 'https://busquedas.elperuano.pe/dispositivo/NL/2554292-1', extra: ['Consultar fe de erratas', 'https://busquedas.elperuano.pe/dispositivo/NL/2556956-1'] }
+      ] },
+      { title: 'Distrital', scope: 'Instrumentos de San Borja', icon: 'building', docs: [
+        { title: 'Ordenanza N° 491-MSB', type: 'Ordenanza distrital', desc: 'Reglamento de Edificaciones y Normas Complementarias de la Zonificación. Texto original en el boletín del 8 de diciembre de 2012.', source: 'El Peruano · Archivo del MEF', url: 'https://www.mef.gob.pe/contenidos/servicios_web/conectamef_quechua/pdf/normas_legales_2012/NL20121208.PDF', extra: ['Consultar TUO de 2025', 'https://www.gob.pe/institucion/munisanborja/informes-publicaciones/6856020-texto-unico-ordenado-tuo-de-la-ordenanza-n-491-msb-aprobado-por-decreto-de-alcaldia-n-002-2025-msb-a'] },
+        { title: 'PUD de San Borja', type: 'Plan urbano distrital · 2020–2030', desc: 'Plan Urbano Distrital del distrito de San Borja 2020–2030. Consulta la publicación municipal y sus documentos.', source: 'Municipalidad de San Borja', url: pud }
+      ] }
+    ];
+    const external = (url, label, cls = '') => `<a class="${cls}" href="${safe(url)}" target="_blank" rel="noopener noreferrer">${safe(label)} ${icon('arrow')}<span class="planning-sr"> (abre en una pestaña nueva)</span></a>`;
+    return `${categoryHero({ title: 'Planeamiento urbano', description: 'Planes, leyes y ordenanzas para comprender cómo se organiza y desarrolla nuestro territorio.', icon: 'file' }, 'UPU San Borja')}
+      <section class="container internal-content planning-content" aria-label="Documentos de planeamiento">
+        <a href="#inicio" data-home class="back-link">${icon('back')} Volver al inicio</a>
+        <div class="planning-intro"><div><span class="eyebrow">BIBLIOTECA DE PLANEAMIENTO</span><h2>Del territorio al distrito</h2><p>Explora los documentos por ámbito y consulta sus fuentes oficiales.</p></div><span class="planning-summary">3 ámbitos de consulta</span></div>
+        <div class="planning-grid">${groups.map((group, index) => `<section class="planning-group planning-group--${index}" aria-labelledby="planning-${index}">
+          <header class="planning-group__heading"><span class="planning-group__icon">${icon(group.icon)}</span><div><h3 id="planning-${index}">${group.title}</h3><p>${group.scope}</p></div><span class="planning-count" aria-label="${group.docs.length} accesos">${group.docs.length}</span></header>
+          <div class="planning-documents">${group.docs.map(doc => `<article class="planning-document"><span class="planning-document__type">${safe(doc.type)}</span><h4>${external(doc.url, doc.url === pud ? 'PUD de San Borja · 2020–2030' : doc.title, 'planning-document__open')}</h4><span class="planning-document__source">${safe(doc.source)}${doc.action ? ' · Catálogo oficial' : ''}</span><details class="planning-document__details"><summary>Ver detalle<span class="planning-sr"> de ${safe(doc.title)}</span></summary><p>${safe(doc.desc)}</p></details>${doc.extra ? `<div class="planning-document__links">${external(doc.extra[1], doc.extra[0], 'planning-document__extra')}</div>` : ''}</article>`).join('')}</div>
+        </section>`).join('')}</div>
+      </section>`;
+  }
+
   function infoPageHTML(name) {
+    if (name === 'planeamiento') return planningPageHTML();
     const configs = {
       'datos-abiertos': {
         title: 'Datos abiertos',
@@ -408,6 +455,7 @@
   }
 
   function renderRoute(scroll = true) {
+    document.querySelector('#predialDialog[open]')?.close();
     closeMenu();
     const route = decodeURIComponent(location.hash.slice(1) || 'inicio');
     if (route === 'inicio' || route === '') main.innerHTML = homeHTML();
@@ -438,6 +486,10 @@
     toggleMenu();
   });
   document.addEventListener('click', (event) => {
+    if (event.target.closest('[data-open-predial]')) {
+      openPredial();
+      return;
+    }
     const explore = event.target.closest('[data-explore]');
     if (explore) {
       event.preventDefault();
@@ -478,6 +530,32 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeMenu();
   });
+
+  let predialDialog;
+  function openPredial() {
+    if (!predialDialog) {
+      predialDialog = document.createElement('dialog');
+      predialDialog.id = 'predialDialog';
+      predialDialog.className = 'predial-dialog';
+      predialDialog.setAttribute('aria-labelledby', 'predial-title');
+      predialDialog.innerHTML = `<header class="predial-dialog__header"><div><strong id="predial-title">PREDIAL</strong><span>UPU San Borja · Simulación de cabida</span></div><button type="button" aria-label="Cerrar PREDIAL" autofocus>${icon('close')}</button></header><div class="predial-dialog__body"><p class="predial-loading" role="status">Cargando PREDIAL…</p><iframe title="PREDIAL: simulador de cabida" src="modules/predial/index.html" allow="fullscreen" allowfullscreen></iframe></div>`;
+      document.body.append(predialDialog);
+      predialDialog.querySelector('button').addEventListener('click', () => predialDialog.close());
+      predialDialog.addEventListener('close', () => document.body.classList.remove('predial-is-open'));
+      const frame = predialDialog.querySelector('iframe');
+      window.addEventListener('message', event => {
+        if (event.source === frame.contentWindow && event.origin === location.origin && event.data?.type === 'PREDIAL_READY') {
+          predialDialog.querySelector('.predial-loading').hidden = true;
+        }
+      });
+      setTimeout(() => {
+        const status = predialDialog.querySelector('.predial-loading');
+        if (!status.hidden) status.textContent = 'La carga está tardando. Comprueba tu conexión a Internet.';
+      }, 25000);
+    }
+    document.body.classList.add('predial-is-open');
+    predialDialog.showModal();
+  }
 
   // Intro institucional con transición automática al logo del header.
   const intro = document.querySelector('#intro');
