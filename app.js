@@ -109,7 +109,7 @@
     },
     {
       id: 'slo',
-      title: 'SLO',
+      title: 'Superficie Limitadora de Obstáculos (SLO)',
       image: 'assets/slo.png',
       label: 'PLANIFICACIÓN TERRITORIAL',
       description:
@@ -159,6 +159,16 @@
     },
   ];
 
+  const UPCOMING_VIEWERS = EXTRA_RESOURCES.map((resource) => ({
+    ...resource,
+    label: {
+      parametros: 'NORMATIVA URBANA',
+      'plano-zonificacion': 'ZONIFICACIÓN',
+      'niveles-operacionales': 'GESTIÓN URBANA',
+    }[resource.id],
+    comingSoon: true,
+  }));
+
   const icon = (name, cls = '') =>
     `<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
   const safe = (value) =>
@@ -199,9 +209,12 @@
   function viewerCard(viewer) {
     const link = viewer.url
       ? `<a class="viewer-card__link" href="${safe(viewer.url)}" target="_blank" rel="noopener noreferrer" aria-label="Abrir visor ${safe(viewer.title)} en una pestaña nueva">Abrir visor ${icon('arrow')}</a>`
-      : `<span class="viewer-card__link is-disabled">Próximamente ${icon('clock')}</span>`;
-    return `<article class="viewer-card">
-      <div class="viewer-card__visual"><img src="${safe(viewer.image)}" alt="Vista previa de ${safe(viewer.title)}" loading="lazy"></div>
+      : '';
+    const visual = viewer.image
+      ? `<img src="${safe(viewer.image)}" alt="Vista previa de ${safe(viewer.title)}" loading="lazy">`
+      : `<span class="viewer-card__placeholder">${icon(viewer.icon)}<strong>Próximamente</strong></span>`;
+    return `<article class="viewer-card${viewer.comingSoon ? ' viewer-card--upcoming' : ''}">
+      <div class="viewer-card__visual">${visual}</div>
       <div class="viewer-card__info"><span class="viewer-card__label">${safe(viewer.label || 'CONSULTA TERRITORIAL')}</span>
         <h3 class="viewer-card__title">${safe(viewer.title)}</h3><p class="viewer-card__desc">${safe(viewer.description)}</p>
         <div class="viewer-card__bottom">${link}<span class="viewer-card__symbol">${icon(viewer.icon)}</span></div>
@@ -237,8 +250,10 @@
         <div class="section-head-inline"><div><div class="eyebrow">EXPLORACIÓN TERRITORIAL</div>
           <h2 class="section-heading" id="viewersTitle">Herramientas que hacen visible la ciudad.</h2>
           <p class="section-lead">Accede a nuestros visores temáticos y conoce más sobre el territorio, la planificación urbana y la gestión de la ciudad.</p>
-        </div><a class="outline-button" href="#visores">Ver todos los visores ${icon('arrow')}</a></div>
+        </div></div>
         <div class="viewer-grid">${VIEWERS.map(viewerCard).join('')}</div>
+        <div class="viewer-grid viewer-grid--upcoming" id="upcomingViewers" hidden>${UPCOMING_VIEWERS.map(viewerCard).join('')}</div>
+        <button type="button" class="viewer-show-more" data-toggle-upcoming-viewers aria-expanded="false" aria-controls="upcomingViewers">Ver más ${icon('chevron')}</button>
       </div></section>
     </div>`;
   }
@@ -263,11 +278,9 @@
   function categoryHTML(id) {
     const category = CATEGORIES.find((c) => c.id === id);
     if (!category) return notFoundHTML();
-    if (id === 'cabida') return `${categoryHero(category)}<section class="container internal-content">
+    if (id === 'cabida') return `${categoryHero(category)}<section class="container internal-content predial-page">
       <a class="back-link" href="#inicio" data-home>${icon('back')} Volver al inicio</a>
-      <h2 class="block-title">Explora un escenario de cabida</h2>
-      <div class="info-grid">${category.info.map(([ic, label]) => `<div class="info-tile">${icon(ic)}<strong>${label}</strong></div>`).join('')}</div>
-      <article class="predial-launch"><span class="predial-launch__icon">${icon('cabida')}</span><div><h2>Del lote a una posibilidad urbana</h2><p>Define la geometría, ajusta los parámetros y observa el escenario en 3D. Puedes importar tus archivos y explorar las herramientas del módulo.</p><small>Los resultados dependen de los parámetros ingresados. Requiere conexión a Internet.</small></div><button type="button" class="predial-open" data-open-predial>Abrir escenario 3D ${icon('arrow')}</button></article>
+      <div id="predialInlineHost" class="predial-inline-host" aria-label="Escenario 3D de cabida"></div>
     </section>`;
     const linked = [...VIEWERS, ...EXTRA_RESOURCES].filter((v) =>
       v.categories.includes(category.id)
@@ -282,12 +295,6 @@
     </section>`;
   }
 
-  function viewAllHTML() {
-    return `${categoryHero({ title: 'Visores urbanos', description: 'Todas las herramientas disponibles para consultar información territorial de San Borja.', icon: 'map' }, 'Explora')}
-      <section class="container internal-content"><a class="back-link" href="#inicio" data-home>${icon('back')} Volver al inicio</a>
-      <h2 class="block-title">Todos los visores</h2><div class="viewer-grid">${VIEWERS.map(viewerCard).join('')}</div></section>`;
-  }
-
   function planningPageHTML() {
     const pud = 'https://www.gob.pe/institucion/munisanborja/informes-publicaciones/5745191-plan-urbano-distrital-del-distrito-de-san-borja-2020-2030';
     const groups = [
@@ -299,6 +306,7 @@
       ] },
       { title: 'Metropolitana', scope: 'Planificación de Lima Metropolitana', icon: 'map', docs: [
         { title: 'PLANMET 2040', type: 'Plan metropolitano', desc: 'Plan de Desarrollo Metropolitano de Lima 2021–2040. Consulta documentos, planos y reglamento.', source: 'Instituto Metropolitano de Planificación', url: 'https://portal.imp.gob.pe/planificacion/plan-met-2040/' },
+        { title: 'Ordenanza N° 341-2001-MML', type: 'Ordenanza metropolitana · Sistema vial', desc: 'Aprueba el Plano del Sistema Vial Metropolitano de Lima, que comprende las vías metropolitanas de San Borja. El trazo distrital recibió ajustes posteriores.', source: 'Documento PDF', url: 'assets/docs/planeamiento/ordenanza-341-mml.pdf' },
         { title: 'Ordenanza N° 1063-MML', type: 'Ordenanza metropolitana', desc: 'Reajuste integral de la zonificación de los usos del suelo de San Borja. Disponible en el catálogo del IMP.', source: 'Instituto Metropolitano de Planificación', url: 'https://portal.imp.gob.pe/Normas_Urbanisticas/metropolitano/ordenanzas-san-borja.html', action: 'Ver catálogo oficial' },
         { title: 'Ordenanza N° 2851-MML', type: 'Ordenanza metropolitana', desc: 'Índice de usos para la ubicación de actividades urbanas del distrito de San Borja.', source: 'El Peruano', url: 'https://busquedas.elperuano.pe/dispositivo/NL/2554292-1', extra: ['Consultar fe de erratas', 'https://busquedas.elperuano.pe/dispositivo/NL/2556956-1'] }
       ] },
@@ -641,7 +649,7 @@
         <div class="open-data__toolbar"><label class="open-data__search">${icon('search')}<input id="openDataSearch" type="search" placeholder="Buscar por nombre o tema…" aria-label="Buscar conjuntos de datos" aria-controls="openDataGrid" autocomplete="off"></label><p id="openDataCount" role="status" aria-live="polite">${OPEN_DATA.length} conjuntos disponibles</p></div>
         <div class="open-data__grid" id="openDataGrid">${OPEN_DATA.map(item => {
           const size = item.bytes >= 1000000 ? (item.bytes / 1000000).toLocaleString('es-PE', { maximumFractionDigits: 1 }) + ' MB' : Math.max(1, Math.round(item.bytes / 1000)) + ' KB';
-          return `<article class="open-data-card" data-theme="${safe(normalize(item.category).replace(/\s+/g, '-'))}" data-open-data-key="${safe(normalize([item.title,item.description,item.category].join(' ')))}"><div class="open-data-card__top"><span class="open-data-card__icon">${openDataIcon(item.id)}</span><span class="open-data-card__format">SHP · ZIP</span></div><span class="open-data-card__category">${safe(item.category)}</span><h3><span class="open-data-card__title-full">${safe(item.title)}</span><span class="open-data-card__title-mobile">${safe(mobileTitles[item.id] || item.title)}</span></h3><p>${safe(item.description)}</p><div class="open-data-card__footer"><div class="open-data-card__meta"><span>${item.count.toLocaleString('es-PE')} registros</span><span>${size}</span></div><a href="${safe(item.url)}" download="${safe(item.id)}.zip" aria-label="Descargar ${safe(item.title)} en ZIP">${downloadIcon}<span class="open-data-card__download-full">Descargar ZIP</span><span class="open-data-card__download-mobile">ZIP</span>${icon('arrow')}</a></div></article>`;
+          return `<article class="open-data-card" data-theme="${safe(normalize(item.category).replace(/\s+/g, '-'))}" data-open-data-key="${safe(normalize([item.title,item.description,item.category].join(' ')))}"><div class="open-data-card__top"><span class="open-data-card__icon">${openDataIcon(item.id)}</span></div><h3><span class="open-data-card__title-full">${safe(item.title)}</span><span class="open-data-card__title-mobile">${safe(mobileTitles[item.id] || item.title)}</span></h3><div class="open-data-card__footer"><div class="open-data-card__meta"><span>${size}</span></div><a href="${safe(item.url)}" download="${safe(item.id)}.zip" aria-label="Descargar ${safe(item.title)} en ZIP">${downloadIcon}<span>Descargar</span>${icon('arrow')}</a></div></article>`;
         }).join('')}</div>
         <div class="open-data__empty" id="openDataEmpty" hidden>${icon('search')}<h3>No encontramos ese conjunto</h3><p>Prueba con otro nombre o tema, como parques, lotes o movilidad.</p></div>
         <p class="open-data__help">Cada descarga incluye geometría, atributos, índice, proyección y codificación (.shp, .dbf, .shx, .prj y .cpg).</p>
@@ -712,6 +720,10 @@
           <a href="#inicio" data-home class="back-link">${icon('back')} Volver al inicio</a>
           <h2 class="block-title" id="about-title">Nuestra iniciativa</h2>
           <p class="about-intro">UPU San Borja es una iniciativa impulsada por la Oficina General de Innovación y Desarrollo Económico (OGIDE) de la Municipalidad de San Borja, a través del trabajo técnico de la Unidad de Planeamiento Urbano.</p>
+          <section class="about-mission" aria-labelledby="about-office-title">
+            <h3 id="about-office-title">Oficina General de Innovación y Desarrollo Económico</h3>
+            <p>Es el órgano de apoyo responsable de conducir los procesos del Planeamiento Urbanístico del Distrito de manera integral, considerando el ordenamiento territorial, en concordancia con las normas nacionales y las competencias del gobierno local. Depende de la Gerencia Municipal.</p>
+          </section>
           <section class="about-mission" aria-labelledby="mission-title">
             <h3 id="mission-title">Nuestra misión</h3>
             <p>Facilitar el acceso público a información territorial, promover la ciencia de datos espaciales y contribuir al planeamiento urbano basado en evidencia, con transparencia e innovación.</p>
@@ -951,9 +963,12 @@
     const routeHash = location.hash;
     const route = decodeURIComponent(routeHash.slice(1) || 'inicio');
     if (route === 'inicio' || route === '') main.innerHTML = homeHTML();
+    else if (route === 'categoria/cabida') {
+      main.innerHTML = categoryHTML('cabida');
+      openPredial();
+    }
     else if (route.startsWith('categoria/'))
       main.innerHTML = categoryHTML(route.slice('categoria/'.length));
-    else if (route === 'visores') main.innerHTML = viewAllHTML();
     else if (route.startsWith('buscar/')) {
       main.innerHTML = homeHTML();
       const term = route.slice('buscar/'.length);
@@ -995,6 +1010,15 @@
     toggleMenu();
   });
   document.addEventListener('click', (event) => {
+    const upcomingToggle = event.target.closest('[data-toggle-upcoming-viewers]');
+    if (upcomingToggle) {
+      const upcoming = document.getElementById('upcomingViewers');
+      const expanded = upcomingToggle.getAttribute('aria-expanded') === 'true';
+      upcoming.hidden = expanded;
+      upcomingToggle.setAttribute('aria-expanded', String(!expanded));
+      upcomingToggle.innerHTML = `${expanded ? 'Ver más' : 'Ver menos'} ${icon('chevron')}`;
+      return;
+    }
     const recordButton = event.target.closest('[data-territorial-record]');
     if (recordButton) {
       const record = territorialSearchState.records.find((item) => item.id === recordButton.dataset.territorialRecord);
@@ -1051,7 +1075,15 @@
       panel.hidden = expanded;
       return;
     }
-    if (event.target.closest('[data-open-predial]')) {
+    const predialTrigger = event.target.closest('[data-open-predial]');
+    if (predialTrigger) {
+      event.preventDefault();
+      closeMenu();
+      if (predialTrigger.matches('a')) {
+        if (location.hash === '#categoria/cabida') renderRoute();
+        else location.hash = 'categoria/cabida';
+        return;
+      }
       openPredial();
       return;
     }
@@ -1215,14 +1247,14 @@
 
   let predialDialog;
   function openPredial() {
+    const inlineHost = document.getElementById('predialInlineHost');
     if (!predialDialog) {
       predialDialog = document.createElement('dialog');
       predialDialog.id = 'predialDialog';
       predialDialog.className = 'predial-dialog';
       predialDialog.setAttribute('aria-labelledby', 'predial-title');
-      predialDialog.innerHTML = `<header class="predial-dialog__header"><div><strong id="predial-title">PREDIAL</strong><span>UPU San Borja · Simulación de cabida</span></div><button type="button" aria-label="Cerrar PREDIAL" autofocus>${icon('close')}</button></header><div class="predial-dialog__body"><p class="predial-loading" role="status">Cargando PREDIAL…</p><iframe title="PREDIAL: simulador de cabida" src="modules/predial/index.html" allow="fullscreen" allowfullscreen></iframe></div>`;
+      predialDialog.innerHTML = `<header class="predial-dialog__header"><div><strong id="predial-title">PREDIAL</strong><span>UPU San Borja · Simulación de cabida</span></div></header><div class="predial-dialog__body"><p class="predial-loading" role="status">Cargando PREDIAL…</p><iframe title="PREDIAL: simulador de cabida" src="modules/predial/index.html" allow="fullscreen" allowfullscreen></iframe></div>`;
       document.body.append(predialDialog);
-      predialDialog.querySelector('button').addEventListener('click', () => predialDialog.close());
       predialDialog.addEventListener('close', () => document.body.classList.remove('predial-is-open'));
       const frame = predialDialog.querySelector('iframe');
       window.addEventListener('message', event => {
@@ -1235,6 +1267,18 @@
         if (!status.hidden) status.textContent = 'La carga está tardando. Comprueba tu conexión a Internet.';
       }, 25000);
     }
+    if (inlineHost) {
+      if (predialDialog.open) {
+        inlineHost.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+      predialDialog.classList.add('predial-dialog--inline');
+      inlineHost.append(predialDialog);
+      predialDialog.show();
+      return;
+    }
+    predialDialog.classList.remove('predial-dialog--inline');
+    document.body.append(predialDialog);
     document.body.classList.add('predial-is-open');
     predialDialog.showModal();
   }
