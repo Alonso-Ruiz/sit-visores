@@ -1,0 +1,145 @@
+[
+  {
+    "id": "contenedores-de-residuo",
+    "title": "Contenedores de residuos",
+    "url": "assets/downloads/contenedores-de-residuo.zip",
+    "bytes": 11889,
+    "count": 180,
+    "shapeType": 11,
+    "description": "Ubicación de contenedores para la gestión de residuos.",
+    "category": "Servicios urbanos",
+    "icon": "database"
+  },
+  {
+    "id": "especies-arboreas-censo-2018",
+    "title": "Especies arbóreas · Censo 2018",
+    "url": "assets/downloads/especies-arboreas-censo-2018.zip",
+    "bytes": 1193928,
+    "count": 56079,
+    "shapeType": 1,
+    "description": "Inventario de árboles y especies registradas en el censo de 2018.",
+    "category": "Ambiente",
+    "icon": "tree"
+  },
+  {
+    "id": "hidrantes-ante-emergencia",
+    "title": "Hidrantes ante emergencias",
+    "url": "assets/downloads/hidrantes-ante-emergencia.zip",
+    "bytes": 1351,
+    "count": 8,
+    "shapeType": 1,
+    "description": "Ubicación de hidrantes en la capa entregada de Sedapal.",
+    "category": "Servicios urbanos",
+    "icon": "shield"
+  },
+  {
+    "id": "lotes",
+    "title": "Lotes",
+    "url": "assets/downloads/lotes.zip",
+    "bytes": 1596588,
+    "count": 13149,
+    "shapeType": 5,
+    "description": "Delimitación de lotes, sectores, subsectores y superficie.",
+    "category": "Catastro",
+    "icon": "grid"
+  },
+  {
+    "id": "manzanas",
+    "title": "Manzanas",
+    "url": "assets/downloads/manzanas.zip",
+    "bytes": 343179,
+    "count": 987,
+    "shapeType": 5,
+    "description": "Delimitación e identificación de las manzanas del distrito.",
+    "category": "Catastro",
+    "icon": "layers"
+  },
+  {
+    "id": "parques-recreativos",
+    "title": "Parques recreativos",
+    "url": "assets/downloads/parques-recreativos.zip",
+    "bytes": 43005,
+    "count": 80,
+    "shapeType": 5,
+    "description": "Ubicación, nombres, códigos y áreas de los parques.",
+    "category": "Espacios públicos",
+    "icon": "tree"
+  },
+  {
+    "id": "red-vial",
+    "title": "Red vial",
+    "url": "assets/downloads/red-vial.zip",
+    "bytes": 124299,
+    "count": 694,
+    "shapeType": 13,
+    "description": "Trazado de vías, clasificación, códigos y longitud.",
+    "category": "Movilidad",
+    "icon": "route"
+  },
+  {
+    "id": "retiros-normativos",
+    "title": "Retiros normativos",
+    "url": "assets/downloads/retiros-normativos.zip",
+    "bytes": 661531,
+    "count": 27328,
+    "shapeType": 13,
+    "description": "Líneas de retiro y anchos registrados en la capa.",
+    "category": "Planeamiento",
+    "icon": "building"
+  },
+  {
+    "id": "sectores",
+    "title": "Sectores",
+    "url": "assets/downloads/sectores.zip",
+    "bytes": 14297,
+    "count": 12,
+    "shapeType": 5,
+    "description": "Delimitación de los sectores del distrito.",
+    "category": "Catastro",
+    "icon": "map"
+  },
+  {
+    "id": "semaforizacion-distrital",
+    "title": "Semaforización distrital",
+    "url": "assets/downloads/semaforizacion-distrital.zip",
+    "bytes": 4365,
+    "count": 70,
+    "shapeType": 11,
+    "description": "Ubicación de intersecciones semaforizadas.",
+    "category": "Movilidad",
+    "icon": "car"
+  },
+  {
+    "id": "subsectores",
+    "title": "Subsectores",
+    "url": "assets/downloads/subsectores.zip",
+    "bytes": 39556,
+    "count": 37,
+    "shapeType": 5,
+    "description": "Delimitación y áreas de los subsectores distritales.",
+    "category": "Catastro",
+    "icon": "map"
+  },
+  {
+    "id": "usos-compatibles",
+    "title": "Usos compatibles",
+    "url": "assets/downloads/usos-compatibles.zip",
+    "bytes": 1996624,
+    "count": 13396,
+    "shapeType": 5,
+    "description": "Información territorial de usos compatibles y parámetros asociados.",
+    "category": "Planeamiento",
+    "icon": "building"
+  },
+  {
+    "id": "zonificacion-ordenanza-1063-mml",
+    "title": "Zonificación · Ordenanza 1063-MML",
+    "url": "assets/downloads/zonificacion-ordenanza-1063-mml.zip",
+    "bytes": 1993194,
+    "count": 13981,
+    "shapeType": 5,
+    "description": "Delimitación y categorías de zonificación según la capa entregada.",
+    "category": "Planeamiento",
+    "icon": "layers"
+  }
+]

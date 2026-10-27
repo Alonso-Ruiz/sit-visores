@@ -99,8 +99,8 @@
     },
     {
       id: 'soterrados',
-      title: 'Soterrados',
-      image: 'assets/soterrado.png',
+      title: 'Contenedores de basura',
+      image: 'assets/contenedores.png',
       label: 'INFRAESTRUCTURA',
       description: 'Visualiza la infraestructura de servicios soterrados.',
       icon: 'route',
@@ -219,7 +219,7 @@
   function homeHTML() {
     return `<div class="home-view">
       <section class="hero" aria-labelledby="heroTitle"><div class="container hero__inner"><div class="hero__content">
-        <span class="eyebrow hero__eyebrow">Ciencia de Datos Espaciales para el Planeamiento Urbano</span>
+        <span class="eyebrow hero__eyebrow">Gestión Territorial para el Planeamiento Urbano</span>
         <h1 id="heroTitle">Conocer la ciudad.<br>Construir su futuro.</h1>
         <p class="hero__description">Explora San Borja, comprende su planificación y accede al conocimiento territorial a través de visores urbanos, análisis espacial y datos abiertos.</p>
         ${searchForm()}
@@ -230,7 +230,7 @@
       <section class="section section--categories" id="descubre" aria-labelledby="categoriesTitle"><div class="container">
         <div class="eyebrow">DESCUBRE UPU</div><h2 class="section-heading" id="categoriesTitle">¿Qué quieres conocer?</h2>
         <p class="section-lead">Explora los principales temas del territorio de San Borja.</p>
-        <div class="category-grid">${CATEGORIES.map(categoryCard).join('')}</div>
+        <div class="category-grid">${CATEGORIES.filter(category => category.id !== 'cabida').map(categoryCard).join('')}</div>
       </div></section>
 
       <section class="section section--viewers" id="exploracion" aria-labelledby="viewersTitle"><div class="container">
@@ -267,7 +267,7 @@
       <a class="back-link" href="#inicio" data-home>${icon('back')} Volver al inicio</a>
       <h2 class="block-title">Explora un escenario de cabida</h2>
       <div class="info-grid">${category.info.map(([ic, label]) => `<div class="info-tile">${icon(ic)}<strong>${label}</strong></div>`).join('')}</div>
-      <article class="predial-launch"><span class="predial-launch__icon">${icon('cabida')}</span><div><h2>Del lote a una posibilidad urbana</h2><p>Define la geometría, ajusta los parámetros y observa el escenario en 3D. Puedes importar tus archivos y explorar las herramientas del módulo.</p><small>Los resultados dependen de los parámetros ingresados. Requiere conexión a Internet.</small></div><button type="button" class="predial-open" data-open-predial>Abrir PREDIAL ${icon('arrow')}</button></article>
+      <article class="predial-launch"><span class="predial-launch__icon">${icon('cabida')}</span><div><h2>Del lote a una posibilidad urbana</h2><p>Define la geometría, ajusta los parámetros y observa el escenario en 3D. Puedes importar tus archivos y explorar las herramientas del módulo.</p><small>Los resultados dependen de los parámetros ingresados. Requiere conexión a Internet.</small></div><button type="button" class="predial-open" data-open-predial>Abrir escenario 3D ${icon('arrow')}</button></article>
     </section>`;
     const linked = [...VIEWERS, ...EXTRA_RESOURCES].filter((v) =>
       v.categories.includes(category.id)
@@ -319,33 +319,339 @@
       </section>`;
   }
 
+  const OPEN_DATA = [
+  {
+    "id": "contenedores-de-residuo",
+    "title": "Contenedores de residuos",
+    "url": "assets/downloads/contenedores-de-residuo.zip",
+    "bytes": 11889,
+    "count": 180,
+    "shapeType": 11,
+    "description": "Ubicación de contenedores para la gestión de residuos.",
+    "category": "Servicios urbanos",
+    "icon": "database"
+  },
+  {
+    "id": "especies-arboreas-censo-2018",
+    "title": "Especies arbóreas · Censo 2018",
+    "url": "assets/downloads/especies-arboreas-censo-2018.zip",
+    "bytes": 1193928,
+    "count": 56079,
+    "shapeType": 1,
+    "description": "Inventario de árboles y especies registradas en el censo de 2018.",
+    "category": "Ambiente",
+    "icon": "tree"
+  },
+  {
+    "id": "hidrantes-ante-emergencia",
+    "title": "Hidrantes ante emergencias",
+    "url": "assets/downloads/hidrantes-ante-emergencia.zip",
+    "bytes": 1351,
+    "count": 8,
+    "shapeType": 1,
+    "description": "Ubicación de hidrantes en la capa entregada de Sedapal.",
+    "category": "Servicios urbanos",
+    "icon": "shield"
+  },
+  {
+    "id": "lotes",
+    "title": "Lotes",
+    "url": "assets/downloads/lotes.zip",
+    "bytes": 1596588,
+    "count": 13149,
+    "shapeType": 5,
+    "description": "Delimitación de lotes, sectores, subsectores y superficie.",
+    "category": "Catastro",
+    "icon": "grid"
+  },
+  {
+    "id": "manzanas",
+    "title": "Manzanas",
+    "url": "assets/downloads/manzanas.zip",
+    "bytes": 343179,
+    "count": 987,
+    "shapeType": 5,
+    "description": "Delimitación e identificación de las manzanas del distrito.",
+    "category": "Catastro",
+    "icon": "layers"
+  },
+  {
+    "id": "parques-recreativos",
+    "title": "Parques recreativos",
+    "url": "assets/downloads/parques-recreativos.zip",
+    "bytes": 43005,
+    "count": 80,
+    "shapeType": 5,
+    "description": "Ubicación, nombres, códigos y áreas de los parques.",
+    "category": "Espacios públicos",
+    "icon": "tree"
+  },
+  {
+    "id": "red-vial",
+    "title": "Red vial",
+    "url": "assets/downloads/red-vial.zip",
+    "bytes": 124299,
+    "count": 694,
+    "shapeType": 13,
+    "description": "Trazado de vías, clasificación, códigos y longitud.",
+    "category": "Movilidad",
+    "icon": "route"
+  },
+  {
+    "id": "retiros-normativos",
+    "title": "Retiros normativos",
+    "url": "assets/downloads/retiros-normativos.zip",
+    "bytes": 661531,
+    "count": 27328,
+    "shapeType": 13,
+    "description": "Líneas de retiro y anchos registrados en la capa.",
+    "category": "Planeamiento",
+    "icon": "building"
+  },
+  {
+    "id": "sectores",
+    "title": "Sectores",
+    "url": "assets/downloads/sectores.zip",
+    "bytes": 14297,
+    "count": 12,
+    "shapeType": 5,
+    "description": "Delimitación de los sectores del distrito.",
+    "category": "Catastro",
+    "icon": "map"
+  },
+  {
+    "id": "semaforizacion-distrital",
+    "title": "Semaforización distrital",
+    "url": "assets/downloads/semaforizacion-distrital.zip",
+    "bytes": 4365,
+    "count": 70,
+    "shapeType": 11,
+    "description": "Ubicación de intersecciones semaforizadas.",
+    "category": "Movilidad",
+    "icon": "car"
+  },
+  {
+    "id": "subsectores",
+    "title": "Subsectores",
+    "url": "assets/downloads/subsectores.zip",
+    "bytes": 39556,
+    "count": 37,
+    "shapeType": 5,
+    "description": "Delimitación y áreas de los subsectores distritales.",
+    "category": "Catastro",
+    "icon": "map"
+  },
+  {
+    "id": "usos-compatibles",
+    "title": "Usos compatibles",
+    "url": "assets/downloads/usos-compatibles.zip",
+    "bytes": 1996624,
+    "count": 13396,
+    "shapeType": 5,
+    "description": "Información territorial de usos compatibles y parámetros asociados.",
+    "category": "Planeamiento",
+    "icon": "building"
+  },
+  {
+    "id": "zonificacion-ordenanza-1063-mml",
+    "title": "Zonificación · Ordenanza 1063-MML",
+    "url": "assets/downloads/zonificacion-ordenanza-1063-mml.zip",
+    "bytes": 1993194,
+    "count": 13981,
+    "shapeType": 5,
+    "description": "Delimitación y categorías de zonificación según la capa entregada.",
+    "category": "Planeamiento",
+    "icon": "layers"
+  }
+];
+
+  function openDataIcon(id) {
+    const shapes = {
+      'contenedores-de-residuo': '<path d="M5 7h14M9 7V4h6v3M7 7l1 14h8l1-14M10 10v7m4-7v7"/>',
+      'especies-arboreas-censo-2018': '<path d="M12 21v-7m-4 7h8M12 3c-4 0-6 3-5 6-5 4-1 8 5 6 6 2 10-2 5-6 1-3-1-6-5-6Z"/>',
+      'hidrantes-ante-emergencia': '<path d="M8 21V8h8v13M6 21h12M7 8h10M9 5a3 3 0 0 1 6 0v3H9ZM8 11H4v5h4m8-5h4v5h-4"/><circle cx="12" cy="12" r="1"/>',
+      'lotes': '<path d="m5 5 14-2 2 16-17 2Z" stroke-dasharray="3 2"/><path d="M8 17V9h8v8Zm0-8 4-3 4 3"/>',
+      'manzanas': '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+      'parques-recreativos': '<path d="M3 13h12v4H3Zm2 4v4m8-4v4M5 10h8M19 21V9m-3-2 3-5 3 5Zm0 4 3-5 3 5Z"/>',
+      'red-vial': '<path d="m6 3-3 18M18 3l3 18M12 3v3m0 4v4m0 4v3"/>',
+      'retiros-normativos': '<path d="M8 14V7l5-4 5 4v7ZM3 18h18M3 16v5m18-5v5M8 14H3V3" stroke-dasharray="2 2"/><path d="m8 16-2 2 2 2m8-4 2 2-2 2"/>',
+      'sectores': '<path d="m3 5 7-2 5 3 6-2v15l-6 2-5-3-7 2Zm7-2v15m5-12v15"/>',
+      'semaforizacion-distrital': '<rect x="8" y="2" width="8" height="16" rx="3"/><circle cx="12" cy="6" r="1"/><circle cx="12" cy="10" r="1"/><circle cx="12" cy="14" r="1"/><path d="M12 18v4M5 5l3 2m11-2-3 2M5 11l3 2m11-2-3 2"/>',
+      'subsectores': '<rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 10h18M10 3v18m0-5h11m-5-6v11"/>',
+      'usos-compatibles': '<path d="M3 20V9l5-4 5 4v11M6 20v-5h4v5m3-12h8v12H3m13-8h2m-2 4h2"/><path d="m14 4 2 2 4-4"/>',
+      'zonificacion-ordenanza-1063-mml': '<path d="m3 6 7-3 11 3-6 5-12-5Zm0 0v13l12 3 6-4V6M15 11v11M3 12l12 4 6-4"/>'
+    };
+    return '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (shapes[id] || shapes.sectores) + '</svg>';
+  }
+
+  const selectedOpenData = new Set();
+  let activeOpenDataTheme = 'Todos';
+  let openDataBusy = false;
+
+  function updateOpenDataView() {
+    const cards = Array.from(document.querySelectorAll('.open-data-card'));
+    if (!cards.length) return;
+    const terms = normalize(document.getElementById('openDataSearch')?.value || '').split(/\s+/).filter(Boolean);
+    const mobileView = window.matchMedia('(max-width: 600px)').matches;
+    let visible = 0;
+    cards.forEach(card => {
+      const themeMatch = mobileView || activeOpenDataTheme === 'Todos' || card.dataset.theme === normalize(activeOpenDataTheme).replace(/\s+/g, '-');
+      const textMatch = terms.every(term => card.dataset.openDataKey.includes(term));
+      card.hidden = !(themeMatch && textMatch);
+      const check = card.querySelector('[data-open-data-check]');
+      if (check) check.checked = selectedOpenData.has(card.dataset.openDataId);
+      if (!card.hidden) visible++;
+    });
+    const count = document.getElementById('openDataCount');
+    if (count) count.textContent = visible + (mobileView || activeOpenDataTheme === 'Todos' ? ' conjuntos disponibles' : ' conjuntos en ' + activeOpenDataTheme);
+    const empty = document.getElementById('openDataEmpty');
+    if (empty) empty.hidden = visible > 0;
+    const selectedCount = document.getElementById('openDataSelectedCount');
+    if (selectedCount) selectedCount.textContent = selectedOpenData.size;
+    const bar = document.getElementById('openDataSelectionBar');
+    if (bar) bar.hidden = selectedOpenData.size === 0;
+    const selectButton = document.getElementById('selectOpenDataTheme');
+    const visibleCards = cards.filter(card => !card.hidden);
+    if (selectButton) {
+      const allSelected = visibleCards.length > 0 && visibleCards.every(card => selectedOpenData.has(card.dataset.openDataId));
+      selectButton.textContent = allSelected ? 'Quitar selección visible' : activeOpenDataTheme === 'Todos' ? 'Seleccionar visibles' : 'Seleccionar tema visible';
+    }
+    const themeSelect = document.getElementById('openDataThemeSelect');
+    if (themeSelect) themeSelect.value = activeOpenDataTheme;
+  }
+
+  function setupOpenData() {
+    const grid = document.getElementById('openDataGrid');
+    if (!grid || grid.dataset.ready) return;
+    grid.dataset.ready = 'true';
+    const cards = Array.from(grid.querySelectorAll('.open-data-card'));
+    cards.forEach((card, index) => {
+      const item = OPEN_DATA[index];
+      if (!item) return;
+      card.dataset.openDataId = item.id;
+      const checkLabel = document.createElement('label');
+      checkLabel.className = 'open-data-card__check';
+      checkLabel.innerHTML = '<input type="checkbox" data-open-data-check aria-label="Seleccionar conjunto"><span></span>';
+      checkLabel.querySelector('input').value = item.id;
+      checkLabel.querySelector('input').setAttribute('aria-label', 'Seleccionar ' + item.title);
+      card.querySelector('.open-data-card__top')?.prepend(checkLabel);
+    });
+    const filters = document.createElement('div');
+    filters.className = 'open-data__filters';
+    filters.setAttribute('role', 'group');
+    filters.setAttribute('aria-label', 'Filtrar y seleccionar datos por tema');
+    filters.innerHTML = '<span class="open-data__filters-label">Temas</span>';
+    const themes = ['Todos', ...new Set(OPEN_DATA.map(item => item.category))];
+    const selectLabel = document.createElement('label');
+    selectLabel.className = 'open-data__select-label';
+    selectLabel.htmlFor = 'openDataThemeSelect';
+    selectLabel.textContent = 'Filtrar por tema';
+    const themeSelect = document.createElement('select');
+    themeSelect.id = 'openDataThemeSelect';
+    themeSelect.className = 'open-data__theme-select';
+    themes.forEach(theme => {
+      const option = document.createElement('option');
+      option.value = theme;
+      option.textContent = theme === 'Todos' ? 'Todos los temas' : theme;
+      themeSelect.append(option);
+    });
+    selectLabel.append(themeSelect);
+    filters.append(selectLabel);
+    themes.forEach(theme => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.openTheme = theme;
+      button.setAttribute('aria-pressed', String(theme === activeOpenDataTheme));
+      button.textContent = theme;
+      filters.append(button);
+    });
+    const selectTheme = document.createElement('button');
+    selectTheme.type = 'button';
+    selectTheme.id = 'selectOpenDataTheme';
+    selectTheme.className = 'open-data__select-theme';
+    selectTheme.textContent = 'Seleccionar visibles';
+    filters.append(selectTheme);
+    grid.before(filters);
+    const selection = document.createElement('div');
+    selection.className = 'open-data__selection';
+    selection.id = 'openDataSelectionBar';
+    selection.hidden = true;
+    selection.innerHTML = '<p><strong id="openDataSelectedCount">0</strong> conjuntos seleccionados</p><button type="button" id="clearOpenDataSelection">Limpiar</button><button type="button" class="open-data__download-selected" id="downloadOpenDataSelection">Descargar selección</button><span id="openDataDownloadStatus" role="status" aria-live="polite"></span>';
+    filters.after(selection);
+    updateOpenDataView();
+  }
+
+  const zipText = new TextEncoder();
+  function zipWrite16(view, offset, value) { view.setUint16(offset, value, true); }
+  function zipWrite32(view, offset, value) { view.setUint32(offset, value >>> 0, true); }
+  function zipCrc32(bytes) {
+    let crc = 0xffffffff;
+    for (const byte of bytes) { crc ^= byte; for (let bit = 0; bit < 8; bit++) crc = (crc >>> 1) ^ (crc & 1 ? 0xedb88320 : 0); }
+    return (crc ^ 0xffffffff) >>> 0;
+  }
+  async function extractZip(buffer) {
+    const bytes = new Uint8Array(buffer), view = new DataView(buffer);
+    let end = -1;
+    for (let i = bytes.length - 22; i >= Math.max(0, bytes.length - 65558); i--) if (view.getUint32(i, true) === 0x06054b50) { end = i; break; }
+    if (end < 0) throw new Error('Uno de los archivos ZIP no tiene un índice válido.');
+    const files = [], count = view.getUint16(end + 10, true);
+    let cursor = view.getUint32(end + 16, true);
+    for (let i = 0; i < count; i++) {
+      if (view.getUint32(cursor, true) !== 0x02014b50) throw new Error('No se pudo leer el contenido de uno de los ZIP.');
+      const method = view.getUint16(cursor + 10, true), size = view.getUint32(cursor + 20, true);
+      const nameLength = view.getUint16(cursor + 28, true), extraLength = view.getUint16(cursor + 30, true), commentLength = view.getUint16(cursor + 32, true), local = view.getUint32(cursor + 42, true);
+      const name = new TextDecoder().decode(bytes.slice(cursor + 46, cursor + 46 + nameLength));
+      const start = local + 30 + view.getUint16(local + 26, true) + view.getUint16(local + 28, true);
+      const packed = bytes.slice(start, start + size);
+      let data;
+      if (method === 0) data = packed;
+      else if (method === 8 && typeof DecompressionStream !== 'undefined') data = new Uint8Array(await new Response(new Blob([packed]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).arrayBuffer());
+      else throw new Error('Este navegador no permite preparar la descarga múltiple. Usa los botones ZIP individuales.');
+      if (!name.endsWith('/')) files.push({ name, data });
+      cursor += 46 + nameLength + extraLength + commentLength;
+    }
+    return files;
+  }
+  function createZip(files) {
+    const localParts = [], directoryParts = [];
+    let offset = 0;
+    files.forEach(file => {
+      const name = zipText.encode(file.name), data = file.data, crc = zipCrc32(data);
+      const local = new Uint8Array(30 + name.length), lv = new DataView(local.buffer);
+      zipWrite32(lv, 0, 0x04034b50); zipWrite16(lv, 4, 20); zipWrite16(lv, 6, 0x800); zipWrite16(lv, 12, 0x21); zipWrite32(lv, 14, crc); zipWrite32(lv, 18, data.length); zipWrite32(lv, 22, data.length); zipWrite16(lv, 26, name.length); local.set(name, 30);
+      localParts.push(local, data);
+      const central = new Uint8Array(46 + name.length), cv = new DataView(central.buffer);
+      zipWrite32(cv, 0, 0x02014b50); zipWrite16(cv, 4, 20); zipWrite16(cv, 6, 20); zipWrite16(cv, 8, 0x800); zipWrite16(cv, 14, 0x21); zipWrite32(cv, 16, crc); zipWrite32(cv, 20, data.length); zipWrite32(cv, 24, data.length); zipWrite16(cv, 28, name.length); zipWrite32(cv, 42, offset); central.set(name, 46);
+      directoryParts.push(central);
+      offset += local.length + data.length;
+    });
+    const directorySize = directoryParts.reduce((sum, part) => sum + part.length, 0);
+    const end = new Uint8Array(22), ev = new DataView(end.buffer);
+    zipWrite32(ev, 0, 0x06054b50); zipWrite16(ev, 8, files.length); zipWrite16(ev, 10, files.length); zipWrite32(ev, 12, directorySize); zipWrite32(ev, 16, offset);
+    return new Blob([...localParts, ...directoryParts, end], { type: 'application/zip' });
+  }
+
+  function openDataPageHTML() {
+    const mobileTitles = { 'contenedores-de-residuo': 'Contenedores', 'especies-arboreas-censo-2018': 'Árboles · 2018', 'hidrantes-ante-emergencia': 'Hidrantes', 'parques-recreativos': 'Parques', 'semaforizacion-distrital': 'Semáforos', 'zonificacion-ordenanza-1063-mml': 'Zonificación' };
+    const downloadIcon = '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></svg>';
+    return `${categoryHero({ title: 'Datos abiertos', description: 'Acceso a información geográfica y datos espaciales del territorio.', icon: 'database' }, 'UPU San Borja')}
+      <section class="container internal-content open-data" aria-labelledby="openDataTitle">
+        <a href="#inicio" data-home class="back-link">${icon('back')} Volver al inicio</a>
+        <div class="open-data__heading"><div><div class="eyebrow">DESCARGAS GEOGRÁFICAS</div><h2 class="block-title" id="openDataTitle">Explora y descarga los datos</h2><p>Cada ZIP contiene un shapefile completo. Descárgalo y extrae todos sus archivos en una misma carpeta para abrirlo en QGIS u otro programa SIG.</p></div></div>
+        <div class="open-data__toolbar"><label class="open-data__search">${icon('search')}<input id="openDataSearch" type="search" placeholder="Buscar por nombre o tema…" aria-label="Buscar conjuntos de datos" aria-controls="openDataGrid" autocomplete="off"></label><p id="openDataCount" role="status" aria-live="polite">${OPEN_DATA.length} conjuntos disponibles</p></div>
+        <div class="open-data__grid" id="openDataGrid">${OPEN_DATA.map(item => {
+          const size = item.bytes >= 1000000 ? (item.bytes / 1000000).toLocaleString('es-PE', { maximumFractionDigits: 1 }) + ' MB' : Math.max(1, Math.round(item.bytes / 1000)) + ' KB';
+          return `<article class="open-data-card" data-theme="${safe(normalize(item.category).replace(/\s+/g, '-'))}" data-open-data-key="${safe(normalize([item.title,item.description,item.category].join(' ')))}"><div class="open-data-card__top"><span class="open-data-card__icon">${openDataIcon(item.id)}</span><span class="open-data-card__format">SHP · ZIP</span></div><span class="open-data-card__category">${safe(item.category)}</span><h3><span class="open-data-card__title-full">${safe(item.title)}</span><span class="open-data-card__title-mobile">${safe(mobileTitles[item.id] || item.title)}</span></h3><p>${safe(item.description)}</p><div class="open-data-card__footer"><div class="open-data-card__meta"><span>${item.count.toLocaleString('es-PE')} registros</span><span>${size}</span></div><a href="${safe(item.url)}" download="${safe(item.id)}.zip" aria-label="Descargar ${safe(item.title)} en ZIP">${downloadIcon}<span class="open-data-card__download-full">Descargar ZIP</span><span class="open-data-card__download-mobile">ZIP</span>${icon('arrow')}</a></div></article>`;
+        }).join('')}</div>
+        <div class="open-data__empty" id="openDataEmpty" hidden>${icon('search')}<h3>No encontramos ese conjunto</h3><p>Prueba con otro nombre o tema, como parques, lotes o movilidad.</p></div>
+        <p class="open-data__help">Cada descarga incluye geometría, atributos, índice, proyección y codificación (.shp, .dbf, .shx, .prj y .cpg).</p>
+      </section>`;
+  }
+
   function infoPageHTML(name) {
+    if (name === 'datos-abiertos') return openDataPageHTML();
     if (name === 'planeamiento') return planningPageHTML();
     const configs = {
-      'datos-abiertos': {
-        title: 'Datos abiertos',
-        desc: 'Acceso a información geográfica y datos espaciales del territorio.',
-        icon: 'database',
-        items: [
-          [
-            'Zonificación urbana',
-            'Delimitaciones y categorías de zonificación.',
-            'layers',
-          ],
-          [
-            'Red vial y secciones',
-            'Información territorial del sistema vial local.',
-            'route',
-          ],
-          [
-            'Espacios públicos',
-            'Capas e inventario geográfico de áreas públicas.',
-            'tree',
-          ],
-        ],
-        notice:
-          'El catálogo público y las descargas se habilitarán cuando los datos cuenten con validación, fuentes y condiciones de uso.',
-      },
       planeamiento: {
         title: 'Planeamiento urbano',
         desc: 'Instrumentos, normas e información que orientan la gestión del territorio distrital.',
@@ -657,6 +963,7 @@
     else if (['datos-abiertos', 'planeamiento', 'nosotros'].includes(route))
       main.innerHTML = infoPageHTML(route);
     else main.innerHTML = notFoundHTML();
+    setupOpenData();
     syncPlanningAccordions();
     document.title =
       route === 'inicio'
@@ -819,10 +1126,79 @@
       next.scrollIntoView({ block: 'nearest' });
     } else if (event.key === 'Enter' && current >= 0) { event.preventDefault(); options[current].click(); }
   });
+  document.addEventListener('input', event => {
+    if (event.target.id !== 'openDataSearch') return;
+    updateOpenDataView();
+  });
+  document.addEventListener('change', event => {
+    const themeSelect = event.target.closest('#openDataThemeSelect');
+    if (themeSelect) {
+      activeOpenDataTheme = themeSelect.value;
+      document.querySelectorAll('[data-open-theme]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.openTheme === activeOpenDataTheme)));
+      updateOpenDataView();
+      return;
+    }
+    const checkbox = event.target.closest('[data-open-data-check]');
+    if (!checkbox) return;
+    if (checkbox.checked) selectedOpenData.add(checkbox.value);
+    else selectedOpenData.delete(checkbox.value);
+    updateOpenDataView();
+  });
+  document.addEventListener('click', async event => {
+    const theme = event.target.closest('[data-open-theme]');
+    if (theme) {
+      activeOpenDataTheme = theme.dataset.openTheme;
+      document.querySelectorAll('[data-open-theme]').forEach(button => button.setAttribute('aria-pressed', String(button === theme)));
+      updateOpenDataView();
+      return;
+    }
+    if (event.target.closest('#selectOpenDataTheme')) {
+      const visible = [...document.querySelectorAll('.open-data-card:not([hidden])')].map(card => card.dataset.openDataId);
+      const remove = visible.length > 0 && visible.every(id => selectedOpenData.has(id));
+      visible.forEach(id => remove ? selectedOpenData.delete(id) : selectedOpenData.add(id));
+      updateOpenDataView();
+      return;
+    }
+    if (event.target.closest('#clearOpenDataSelection')) {
+      selectedOpenData.clear();
+      updateOpenDataView();
+      return;
+    }
+    const download = event.target.closest('#downloadOpenDataSelection');
+    if (!download || openDataBusy) return;
+    openDataBusy = true;
+    download.disabled = true;
+    download.textContent = 'Preparando descarga…';
+    const status = document.getElementById('openDataDownloadStatus');
+    try {
+      const contents = [];
+      for (const item of OPEN_DATA.filter(item => selectedOpenData.has(item.id))) {
+        status.textContent = 'Preparando ' + item.title + '…';
+        const response = await fetch(item.url);
+        if (!response.ok) throw new Error('No se pudo cargar ' + item.title + '.');
+        const files = await extractZip(await response.arrayBuffer());
+        files.forEach(file => contents.push({ name: item.id + '/' + file.name.split('/').filter(part => part && part !== '..').join('/'), data: file.data }));
+      }
+      const blob = createZip(contents);
+      const url = URL.createObjectURL(blob), link = document.createElement('a');
+      link.href = url;
+      link.download = 'datos-abiertos-seleccion.zip';
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(url), 30000);
+      status.textContent = 'Descarga lista.';
+    } catch (error) {
+      status.textContent = error.message || 'No se pudo preparar el archivo. Prueba con los ZIP individuales.';
+    } finally {
+      openDataBusy = false;
+      download.disabled = false;
+      download.textContent = 'Descargar selección';
+    }
+  });
   window.addEventListener('hashchange', () => renderRoute());
   window.addEventListener('resize', () => {
     if (window.innerWidth > 850) closeMenu();
     syncPlanningAccordions();
+    updateOpenDataView();
   });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeMenu();
