@@ -2959,7 +2959,7 @@ input:focus-visible {
   .open-data-card__icon { width: 42px; height: 42px; border-radius: 13px; }
   .open-data-card__icon .icon { width: 27px; height: 27px; }
   .open-data-card__title-full,
-  .open-data-card__footer a .icon:last-child { display: none; }
+  .open-data-card__footer a .icon { display: none; }
   .open-data-card__title-mobile, .open-data-card__download-mobile { display: inline; }
   .open-data-card h3 { margin: 0 0 8px; min-height: 2.8em; font-size: 10px; line-height: 1.3; letter-spacing: -.1px; overflow-wrap: anywhere; }
   .open-data-card__meta { justify-content: center; padding-top: 7px; margin-bottom: 7px; font-size: 10px; }

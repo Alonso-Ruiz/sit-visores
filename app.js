@@ -190,6 +190,7 @@
       .toLowerCase()
       .trim();
   let territorialSearchDataPromise;
+  let territorialUrbanizationFeatures = [];
   let territorialSearchState = { records: [], visible: 0 };
   let selectedTerritorialRecord;
   let searchRequest = 0;
@@ -752,6 +753,84 @@
     throw new Error('Archivo territorial incompleto');
   }
 
+  function parseSemicolonCSV(source) {
+    const rows = [];
+    let row = [], field = '', quoted = false;
+    for (let i = 0; i < source.length; i++) {
+      const char = source[i];
+      if (quoted) {
+        if (char === '"' && source[i + 1] === '"') { field += '"'; i++; }
+        else if (char === '"') quoted = false;
+        else field += char;
+      } else if (char === '"' && field === '') quoted = true;
+      else if (char === ';') { row.push(field); field = ''; }
+      else if (char === '\n' || char === '\r') {
+        if (char === '\r' && source[i + 1] === '\n') i++;
+        row.push(field); field = '';
+        if (row.some(value => value.trim())) rows.push(row);
+        row = [];
+      } else field += char;
+    }
+    if (field || row.length) { row.push(field); rows.push(row); }
+    const headers = (rows.shift() || []).map((header, index) => (index === 0 ? header.replace(/^\uFEFF/, '') : header).trim());
+    return rows.map(values => Object.fromEntries(headers.map((header, index) => [header, (values[index] || '').trim()])));
+  }
+
+  function matchingLotAddress(record, term = '') {
+    if (!record.addresses?.length) return '';
+    const titleTokens = new Set(searchKey(record.title).split(' '));
+    const addressTokens = searchKey(term).split(' ').filter(token => token && !titleTokens.has(token));
+    return record.addresses.find(address => addressTokens.length && addressTokens.every(token => searchKey(address).split(' ').includes(token))) || record.addresses[0];
+  }
+
+  function geometryPositions(coordinates, positions = []) {
+    if (!Array.isArray(coordinates)) return positions;
+    if (typeof coordinates[0] === 'number' && typeof coordinates[1] === 'number') positions.push([coordinates[0], coordinates[1]]);
+    else coordinates.forEach(value => geometryPositions(value, positions));
+    return positions;
+  }
+
+  function geometryBounds(geometry) {
+    const positions = geometryPositions(geometry?.coordinates);
+    if (!positions.length) return null;
+    return {
+      minX: Math.min(...positions.map(point => point[0])), maxX: Math.max(...positions.map(point => point[0])),
+      minY: Math.min(...positions.map(point => point[1])), maxY: Math.max(...positions.map(point => point[1])),
+    };
+  }
+
+  function pointInRing(point, ring) {
+    let inside = false;
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const [xi, yi] = ring[i], [xj, yj] = ring[j];
+      const cross = (point[1] - yi) * (xj - xi) - (point[0] - xi) * (yj - yi);
+      if (Math.abs(cross) < 1e-10 && point[0] >= Math.min(xi, xj) - 1e-10 && point[0] <= Math.max(xi, xj) + 1e-10 && point[1] >= Math.min(yi, yj) - 1e-10 && point[1] <= Math.max(yi, yj) + 1e-10) return true;
+      if ((yi > point[1]) !== (yj > point[1]) && point[0] < ((xj - xi) * (point[1] - yi)) / (yj - yi) + xi) inside = !inside;
+    }
+    return inside;
+  }
+
+  function pointInUrbanization(point, geometry) {
+    const polygons = geometry?.type === 'Polygon' ? [geometry.coordinates] : geometry?.type === 'MultiPolygon' ? geometry.coordinates : [];
+    return polygons.some(rings => rings.length && pointInRing(point, rings[0]) && !rings.slice(1).some(ring => pointInRing(point, ring)));
+  }
+
+  function urbanizationsForGeometry(geometry) {
+    const positions = geometryPositions(geometry?.coordinates);
+    if (!positions.length) return [];
+    const step = Math.max(1, Math.ceil(positions.length / 240));
+    const samples = positions.filter((_, index) => index % step === 0);
+    if (positions.length > 1) {
+      for (let i = step; i < positions.length; i += step) samples.push([(positions[i - 1][0] + positions[i][0]) / 2, (positions[i - 1][1] + positions[i][1]) / 2]);
+    }
+    const names = [];
+    territorialUrbanizationFeatures.forEach(({ name, geometry: urbanGeometry, bounds }) => {
+      if (!name || !bounds || samples.every(([x, y]) => x < bounds.minX || x > bounds.maxX || y < bounds.minY || y > bounds.maxY)) return;
+      if (samples.some(point => pointInUrbanization(point, urbanGeometry)) && !names.includes(name)) names.push(name);
+    });
+    return names;
+  }
+
   function loadTerritorialSearchData() {
     if (!territorialSearchDataPromise) {
       const sources = [
@@ -760,6 +839,7 @@
         ['indice_distrital_actual.js', 'indice-usos', 'Índice de usos'],
         ['red_vial_0.js', 'vias', 'Vías'],
         ['CuadranteSLO100mx100m_2.js', 'slo', 'SLO'],
+        ['lotes_catastrales_20260928.js', 'lotes-catastrales', 'Lotes catastrales'],
       ];
       territorialSearchDataPromise = Promise.all(sources.map(async ([file, dataset, datasetName]) => {
         const response = await fetch('data/territorial/' + file);
@@ -767,12 +847,55 @@
         const data = readDataLiteral(await response.text());
         return (Array.isArray(data) ? data : data.features).map((feature, i) => {
           const p = feature.properties || feature;
-          const title = String(p.NOMBRE || p.NOMBRE_FIN || p.NOMBRE_GIRO_EQUIVALENTE_REV3 || p.ACTIVIDAD || p.Name || p['Cód_Cuadr'] || datasetName);
-          const subtitle = [p['CÓDIGO'] || p.COD_GIRO || p['Cód_Cuadr'], p.TRAMO || p.CLASIFICAC].filter(Boolean).join(' · ');
+          const lotCode = p.COD_LOTE;
+          const title = String(lotCode ? `Lote ${lotCode}` : p.NOMBRE || p.NOMBRE_FIN || p.NOMBRE_GIRO_EQUIVALENTE_REV3 || p.ACTIVIDAD || p.Name || p['Cód_Cuadr'] || datasetName);
+          const subtitle = (dataset === 'lotes-catastrales'
+            ? [`Sector ${p.Sector}`, p.subsectore && `Subsector ${p.subsectore}`, p.CUC && `CUC ${p.CUC}`]
+            : [p['CÓDIGO'] || p.COD_GIRO || p['Cód_Cuadr'], p.TRAMO || p.CLASIFICAC])
+            .filter(Boolean).join(' · ');
           const searchable = [datasetName, title, subtitle, ...Object.values(p).flatMap(v => Array.isArray(v) ? v : typeof v === 'object' ? [] : [v])].join(' ');
           return { id: dataset + '-' + i, dataset, datasetName, title, subtitle, searchable, properties: p, geometry: feature.geometry };
         });
-      })).then(groups => groups.flat()).catch(error => { territorialSearchDataPromise = null; throw error; });
+      })).then(async groups => {
+        const [addressResponse, urbanResponse] = await Promise.all([
+          fetch('data/territorial/direcciones_lotes.csv'),
+          fetch('data/territorial/urbanizaciones_etapas.js'),
+        ]);
+        if (!addressResponse.ok) throw new Error('No se pudo cargar direcciones_lotes.csv');
+        if (!urbanResponse.ok) throw new Error('No se pudo cargar urbanizaciones_etapas.js');
+        const [addressText, urbanText] = await Promise.all([addressResponse.text(), urbanResponse.text()]);
+        const addressRows = parseSemicolonCSV(addressText);
+        const urbanData = readDataLiteral(urbanText);
+        territorialUrbanizationFeatures = (urbanData.features || []).map(feature => ({
+          name: String(feature.properties?.NombreUrb || '').trim(),
+          geometry: feature.geometry,
+          bounds: geometryBounds(feature.geometry),
+        })).filter(feature => feature.name && feature.name !== '0');
+        const addressesByLot = new Map();
+        const viaAliases = { 'av.': 'avenida', av: 'avenida', 'jr.': 'jirón', jr: 'jirón', 'ca.': 'calle', 'cl.': 'calle', 'psje.': 'pasaje', psje: 'pasaje' };
+        addressRows.forEach(row => {
+          const code = String(row.COD_LOTE || '').trim();
+          if (!code) return;
+          const parts = [row.TIPO_VIA, row.NOMBRE_VIA, row.NUM_PUERTA].filter(Boolean);
+          if (!parts.length) return;
+          const address = parts.join(' ');
+          const type = String(row.TIPO_VIA || '').trim().toLowerCase();
+          const searchableAddress = [address, viaAliases[type]].filter(Boolean).join(' ');
+          const list = addressesByLot.get(code) || [];
+          if (!list.some(item => item.display === address)) list.push({ display: address, searchable: searchableAddress });
+          addressesByLot.set(code, list);
+        });
+        return groups.flat().map(record => {
+          if (record.dataset !== 'lotes-catastrales') return record;
+          const addresses = addressesByLot.get(String(record.properties.COD_LOTE)) || [];
+          record.addresses = addresses.map(item => item.display);
+          if (addresses.length) {
+            record.properties.DIRECCIONES = record.addresses;
+            record.searchable += ' ' + addresses.map(item => item.searchable).join(' ');
+          }
+          return record;
+        });
+      }).catch(error => { territorialSearchDataPromise = null; throw error; });
     }
     return territorialSearchDataPromise;
   }
@@ -822,7 +945,12 @@
       }).filter(Boolean).sort((a,b) => b.score - a.score || a.record.title.localeCompare(b.record.title, 'es'));
       territorialSearchState = { records: scored.map(item => item.record), visible: 12 };
       const matches = territorialSearchState.records;
-      box.innerHTML = matches.length ? matches.slice(0, 12).map((record, i) => `<button type="button" role="option" aria-selected="false" tabindex="-1" id="suggestion-${i}" data-territorial-record="${safe(record.id)}"><span class="search-suggestions__type">${safe(record.datasetName)}</span><strong>${safe(record.title)}</strong><small>${safe(record.subtitle || 'Ver información disponible')}</small></button>`).join('') : '<p class="search-suggestions__message">No hay coincidencias. Prueba con un nombre, tramo, actividad o código de los archivos disponibles.</p>';
+      box.innerHTML = matches.length ? matches.slice(0, 12).map((record, i) => {
+        const lotAddress = record.dataset === 'lotes-catastrales' ? matchingLotAddress(record, term) : '';
+        const suggestionTitle = lotAddress || record.title;
+        const subtitle = record.dataset === 'lotes-catastrales' ? record.title : record.subtitle;
+        return `<button type="button" role="option" aria-selected="false" tabindex="-1" id="suggestion-${i}" data-territorial-record="${safe(record.id)}"><span class="search-suggestions__type">${safe(record.datasetName)}</span><strong>${safe(suggestionTitle)}</strong><small>${safe(subtitle || 'Ver información disponible')}</small></button>`;
+      }).join('') : '<p class="search-suggestions__message">No hay coincidencias. Prueba con un nombre, tramo, actividad o código de los archivos disponibles.</p>';
       input.closest('.search-autocomplete').querySelector('[role="status"]').textContent = matches.length ? `${matches.length} coincidencias. Se muestran las primeras ${Math.min(12, matches.length)}.` : 'Sin coincidencias.';
     } catch {
       if (request === searchRequest) box.innerHTML = '<p class="search-suggestions__message">No se pudieron cargar los datos. Vuelve a escribir para reintentar.</p>';
@@ -836,22 +964,25 @@
     );
     const preferred = {
       'Índice de usos': ['NOMBRE_GIRO_EQUIVALENTE_REV3', 'COD_GIRO', 'ACTIVIDAD', 'DESCRIPCIÓN DE LA CLASE', 'ZONAS', 'OBSERVACIONES'],
-      'Vías': ['NOMBRE_FIN', 'CATEGORÍA', 'CLASIFIC', 'TRAMO', 'ANCHO', 'COMPETENCI'],
+      'Vías': ['NOMBRE_FIN', 'CATEGORÍA', 'CLASIFIC', 'TRAMO', 'URBANIZACION', 'ANCHO', 'COMPETENCI'],
       'SLO': ['Cód_Cuadr', 'Altura_ml', 'Altitud_me', 'Alt_+45', 'SC_5%', 'Alt_RD_Pis'],
-      'Espacios públicos': ['NOMBRE', 'CLASIFICAC', 'ÁREA', 'AREA VERDE', 'ATU', 'ALT_MAX(m)'],
+      'Espacios públicos': ['NOMBRE', 'CLASIFICAC', 'URBANIZACION', 'ÁREA', 'AREA VERDE', 'ATU', 'ALT_MAX(m)'],
       'Soterrados': ['Name', 'TIPO', 'nro orden', 'CAPACIDAD'],
+      'Lotes catastrales': ['COD_LOTE', 'DIRECCIONES', 'URBANIZACION', 'CUC', 'Sector', 'subsectore', 'AREA_M2', 'M2_CONSTRU', 'periodo', 'ID'],
     }[tabName];
     if (preferred) {
       const ordered = preferred.map((key) => entries.find(([name]) => name === key)).filter(Boolean);
       entries = [...ordered, ...entries.filter(([key]) => !preferred.includes(key))];
     }
-    const labels = { Name: 'Código', TIPO: 'Tipo', CAPACIDAD: 'Capacidad', 'nro orden': 'Número de orden', NOMBRE: 'Nombre', NOMBRE_FIN: 'Nombre de la vía', 'CÓDIGO': 'Código', COD_GIRO: 'Código de giro', NOMBRE_GIRO_EQUIVALENTE_REV3: 'Nombre de la actividad', CLASIFICAC: 'Clasificación', CLASIFIC: 'Clasificación', 'ÁREA': 'Área (m²)', 'AREA VERDE': 'Área verde (m²)', TRAMO: 'Tramo', ANCHO: 'Ancho (m)', COMPETENCI: 'Competencia', 'Cód_Cuadr': 'Código de cuadrante', Altura_ml: 'Altura disponible (m)', Altitud_me: 'Altitud media (m)', Alt_RD_Pis: 'Altura de referencia (pisos)' };
+    const labels = { Name: 'Código', TIPO: 'Tipo', CAPACIDAD: 'Capacidad', 'nro orden': 'Número de orden', NOMBRE: 'Nombre', NOMBRE_FIN: 'Nombre de la vía', 'CÓDIGO': 'Código', COD_GIRO: 'Código de giro', NOMBRE_GIRO_EQUIVALENTE_REV3: 'Nombre de la actividad', CLASIFICAC: 'Clasificación', CLASIFIC: 'Clasificación', 'ÁREA': 'Área (m²)', AREA_M2: 'Área del lote (m²)', M2_CONSTRU: 'Área construida (m²)', CUC: 'Código único catastral (CUC)', COD_LOTE: 'Número de lote', DIRECCIONES: 'Direcciones asociadas', URBANIZACION: 'Urbanización', Sector: 'Sector', subsectore: 'Subsector', periodo: 'Periodo', ID: 'ID', 'AREA VERDE': 'Área verde (m²)', TRAMO: 'Tramo', ANCHO: 'Ancho (m)', COMPETENCI: 'Competencia', 'Cód_Cuadr': 'Código de cuadrante', Altura_ml: 'Altura disponible (m)', Altitud_me: 'Altitud media (m)', Alt_RD_Pis: 'Altura de referencia (pisos)' };
     const compact = record.datasetName === 'Parques';
     const rows = entries.map(([key, value], index) => {
       let display = value;
       if (key === 'ZONAS' && value && typeof value === 'object')
         display = Object.entries(value).filter(([, allowed]) => allowed === 'X').map(([zone]) => zone).join(', ') || 'Sin zonas indicadas';
-      else if (Array.isArray(value)) display = value.filter(Boolean).join(', ');
+      else if (Array.isArray(value)) display = key === 'DIRECCIONES'
+        ? `${value.slice(0, 3).filter(Boolean).join(' · ')}${value.length > 3 ? ` · y ${value.length - 3} más` : ''}`
+        : value.filter(Boolean).join(', ');
       else if (value && typeof value === 'object') display = Object.entries(value).map(([label, item]) => `${label}: ${item}`).join(' · ');
       return `<div class="territorial-info__row${compact && index >= 6 ? ' territorial-info__row--extra' : ''}"${compact && index >= 6 ? ' hidden' : ''}><dt>${safe(labels[key] || key)}</dt><dd>${safe(display)}</dd></div>`;
     }).join('');
@@ -897,14 +1028,21 @@
       'Soterrados': 'https://inventariodiestra2026.netlify.app/',
     };
     const tabFor = { 'Índice de usos': 'Índice de usos', 'Vías': 'Vías', 'SLO': 'SLO', 'Parques': 'Espacios públicos', 'Soterrados': 'Soterrados' };
+    if (['Vías', 'Parques', 'Lotes catastrales'].includes(record.datasetName)) {
+      const urbanizations = urbanizationsForGeometry(record.geometry);
+      record.properties.URBANIZACION = urbanizations.length ? urbanizations.join(' · ') : 'No identificada en la capa de urbanizaciones';
+    }
     const activeTab = tabFor[record.datasetName] || record.datasetName;
-    const title = record.title;
+    const title = record.dataset === 'lotes-catastrales'
+      ? matchingLotAddress(record, query) || record.title
+      : record.title;
     const intro = {
       SLO: 'Restricciones en el entorno de la Base Aérea Las Palmas.',
       Vías: record.properties.TRAMO || record.subtitle,
       Parques: record.properties.CLASIFICAC || 'Información de espacio público.',
       Soterrados: 'Inventario de infraestructura de servicios soterrados.',
       'Índice de usos': record.properties.ACTIVIDAD || 'Actividad urbana y compatibilidad de usos.',
+      'Lotes catastrales': matchingLotAddress(record, query) || record.subtitle,
     }[record.datasetName] || record.subtitle;
     const tabsMarkup = [activeTab].map((tab, index) => `<button type="button" role="tab" id="territorial-tab-${index}" aria-selected="${tab === activeTab}" aria-controls="territorialTabPanel" tabindex="${tab === activeTab ? 0 : -1}" data-info-tab="${safe(tab)}" data-viewer-url="${safe(viewers[tab] || '')}">${safe(tab)}</button>`).join('');
     const viewerUrl = viewers[activeTab];
@@ -1023,6 +1161,11 @@
     if (recordButton) {
       const record = territorialSearchState.records.find((item) => item.id === recordButton.dataset.territorialRecord);
       if (record) {
+        const selectedAddress = record.dataset === 'lotes-catastrales' ? matchingLotAddress(record, territorialSearchTerm) : '';
+        const selectedText = record.dataset === 'lotes-catastrales'
+          ? [selectedAddress, record.title].filter(Boolean).join(' · ')
+          : [record.title, record.subtitle].filter(Boolean).join(' · ');
+        document.querySelectorAll('[data-search-form] input').forEach(input => { input.value = selectedText; });
         showTerritorialRecord(record, territorialSearchTerm);
       }
       return;
